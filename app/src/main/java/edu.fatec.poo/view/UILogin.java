@@ -2,6 +2,7 @@ package edu.fatec.poo.view;
 
 import javafx.stage.Stage;
 import javafx.application.Application;
+import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -50,7 +51,9 @@ public class UILogin  extends Application{
         painel.setVgap(10);
         painel.setStyle("-fx-padding:20;");
         
-        Cadastrar.addEventHandler(Event.ACTION_EVENT, p ->{
+        Cadastrar.setOnAction(p ->{
+         UICadastro cad = new UICadastro();
+         cad.start(stage);
             
         });
 

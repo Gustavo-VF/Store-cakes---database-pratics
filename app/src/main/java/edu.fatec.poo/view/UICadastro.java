@@ -1,6 +1,9 @@
 package edu.fatec.poo.view;
 
 import javafx.stage.Stage;
+
+import javafx.event.Event;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -34,7 +37,7 @@ public class UICadastro  extends Application{
         TextField passworField = new TextField();
         
         
-        Button Cadastrar = new Button("Cadastrar");
+        Button Voltar = new Button("Voltar");
         Button Entrar = new Button("Entrar");
 
         nomelabel.setFont(new Font(25));
@@ -43,8 +46,15 @@ public class UICadastro  extends Application{
         emailField.setFont(new Font(25));
         passwordLabel.setFont(new Font(25));
         passworField.setFont(new Font(25));
-        Cadastrar.setFont(new Font(25));
+        Voltar.setFont(new Font(25));
         Entrar.setFont(new Font(25));
+
+        Voltar.setOnAction(e -> {
+            UILogin login = new UILogin();
+            login.start(stage);
+        });
+       
+
         
         painel.add(nomelabel, 0, 0);
         painel.add(nomField, 1, 0);
@@ -52,7 +62,7 @@ public class UICadastro  extends Application{
         painel.add(emailField, 1,1);
         painel.add(passwordLabel, 0 ,2);
         painel.add(passworField, 1,2);
-        painel.add(Cadastrar,0,3);
+        painel.add(Voltar,0,3);
         painel.add(Entrar,1,3);
         
         painel.setHgap(10);
