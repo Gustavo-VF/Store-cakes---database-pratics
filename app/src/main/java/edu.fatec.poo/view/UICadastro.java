@@ -49,10 +49,7 @@ public class UICadastro  extends Application{
         Voltar.setFont(new Font(25));
         Entrar.setFont(new Font(25));
 
-        Voltar.setOnAction(e -> {
-            UILogin login = new UILogin();
-            login.start(stage);
-        });
+        
        
 
         
