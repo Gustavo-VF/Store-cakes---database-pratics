@@ -15,33 +15,40 @@
    <children>
       <VBox maxHeight="420.0" maxWidth="720.0" prefHeight="420.0" prefWidth="720.0" StackPane.alignment="CENTER">
          <children>
-            <AnchorPane maxHeight="306.0" maxWidth="600.0" prefHeight="297.0" prefWidth="563.0" styleClass="painel-com-borda" stylesheets="@cssLogin.css" VBox.vgrow="ALWAYS">
+            <VBox VBox.vgrow="ALWAYS">
                <children>
-                  <Label layoutX="38.0" layoutY="251.0" text="Criar Conta">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="39.0" layoutY="48.0" text="E-mail">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-                  <Button layoutX="428.0" layoutY="244.0" mnemonicParsing="false" text="Entrar">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Button>
-                  <TextField layoutX="19.0" layoutY="71.0" prefHeight="50.0" prefWidth="506.0" />
-                  <Label layoutX="38.0" layoutY="160.0" text="Senha">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="212.0" layoutY="266.0" text="Esqueci minha senha" textFill="RED" />
-                  <PasswordField layoutX="19.0" layoutY="183.0" prefHeight="50.0" prefWidth="506.0" />
+                  <AnchorPane maxHeight="306.0" maxWidth="600.0" prefHeight="306.0" prefWidth="600.0" styleClass="painel-com-borda" stylesheets="@cssLogin.css">
+                     <children>
+                        <Label layoutX="46.0" layoutY="285.0" text="Criar Conta">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="46.0" layoutY="48.0" text="E-mail">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Button layoutX="401.0" layoutY="278.0" mnemonicParsing="false" text="Entrar">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Button>
+                        <TextField layoutX="46.0" layoutY="71.0" prefHeight="50.0" prefWidth="435.0" />
+                        <Label layoutX="46.0" layoutY="160.0" text="Senha">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="46.0" layoutY="239.0" text="Esqueci minha senha" textFill="RED" />
+                        <PasswordField layoutX="46.0" layoutY="183.0" prefHeight="50.0" prefWidth="435.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                     </padding>
+                  </AnchorPane>
                </children>
-            </AnchorPane>
+            </VBox>
          </children>
          <padding>
             <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
