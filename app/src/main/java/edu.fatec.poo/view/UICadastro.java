@@ -28,7 +28,7 @@ public class UICadastro  extends Application{
     Parent root = FXMLLoader.load(getClass().getResource("/UICadastro.fxml"));        
         Scene cena = new Scene(root);
        
-        stage.setTitle("Tela de Login");
+        stage.setTitle("Tela de Cadastro");
         stage.setScene(cena);
         stage.show();
 
