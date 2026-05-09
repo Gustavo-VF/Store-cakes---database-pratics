@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.fatec.poo.controller.LoginController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox maxHeight="420.0" maxWidth="720.0" prefHeight="420.0" prefWidth="720.0" StackPane.alignment="CENTER">
          <children>
@@ -18,29 +18,40 @@
                <children>
                   <AnchorPane maxHeight="306.0" maxWidth="600.0" prefHeight="306.0" prefWidth="600.0" styleClass="painel-com-borda" stylesheets="@cssLogin.css">
                      <children>
-                        <Label fx:id="btn_Cadastro" layoutX="46.0" layoutY="285.0" onMouseClicked="#TelaCadastro" text="Criar Conta">
+                        <Label layoutX="47.0" layoutY="93.0" text="E-mail">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label layoutX="46.0" layoutY="48.0" text="E-mail">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Button layoutX="401.0" layoutY="278.0" mnemonicParsing="false" text="Entrar">
+                        <Button layoutX="371.0" layoutY="265.0" mnemonicParsing="false" text="Cadastrar">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Button>
-                        <TextField layoutX="46.0" layoutY="71.0" prefHeight="50.0" prefWidth="435.0" />
-                        <Label layoutX="46.0" layoutY="160.0" text="Senha">
+                        <TextField layoutX="46.0" layoutY="116.0" prefHeight="50.0" prefWidth="435.0" />
+                        <Label layoutX="47.0" layoutY="166.0" text="Senha">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label layoutX="46.0" layoutY="239.0" text="Esqueci minha senha" textFill="RED" />
-                        <PasswordField layoutX="46.0" layoutY="183.0" prefHeight="50.0" prefWidth="435.0" />
+                        <PasswordField layoutX="46.0" layoutY="189.0" prefHeight="50.0" prefWidth="210.0" />
+                        <Label layoutX="274.0" layoutY="166.0" text="Confirmar Senha">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <PasswordField layoutX="274.0" layoutY="189.0" prefHeight="50.0" prefWidth="210.0" />
+                        <Label layoutX="46.0" layoutY="14.0" text="Label">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <TextField layoutX="46.0" layoutY="37.0" prefHeight="50.0" prefWidth="435.0" />
+                        <Button layoutX="47.0" layoutY="265.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="97.0" text="Voltar">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Button>
                      </children>
                      <padding>
                         <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
