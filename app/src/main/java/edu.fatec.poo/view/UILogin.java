@@ -26,25 +26,6 @@ public class UILogin  extends Application{
          launch(args);
     }
 
-    @FXML
-private Label btn_Cadastro;
-
-@FXML // Adicione o @FXML para o Scene Builder reconhecer o método
-void TelaCadastro(MouseEvent event) { // O parâmetro 'event' é obrigatório aqui
-    try {
-        Parent loader = FXMLLoader.load(getClass().getResource("/UICadastro.fxml"));
-        
-        // Agora o 'event' e o 'Node' vão funcionar
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        
-        stage.setScene(new Scene(loader));
-        stage.show();
-        
-    } catch (Exception e) {
-        System.out.println("erro ao carregar a tela");
-    }
-}
-
     @Override
     public void start(Stage stage)throws Exception{
         
