@@ -12,68 +12,7 @@ public class ClienteIDao implements IDao<Cliente> {
 
     public ClienteIDao(IDaoConnection IDaoConnection) throws SQLException, ClassNotFoundException {
         c = IDaoConnection.getConnection();
-
-        initDatabase();
     }
-
-    private void initDatabase() throws SQLException {
-        DatabaseMetaData meta = c.getMetaData();
-        String dbName = meta.getDatabaseProductName().toLowerCase();
-
-        if (!tableExists("cliente")) {
-            if (dbName.contains("microsoft")) {
-                createTableSQLServer();
-            } else if (dbName.contains("mysql") || dbName.contains("mariadb")) {
-                createTableMySQL();
-            } else {
-                throw new SQLException("Banco de dados '" + dbName + "' não configurado para inicialização automática.");
-            }
-        }
-    }
-
-    private void createTableMySQL() throws SQLException {
-        String sql = """
-                CREATE TABLE cliente (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    nome VARCHAR(100) NOT NULL,
-                    email VARCHAR(100) UNIQUE NOT NULL,
-                    telefone INT,
-                    endereco_logradouro VARCHAR(150),
-                    endereco_cep VARCHAR(9),
-                    endereco_num INT,
-                    endereco_complemento VARCHAR(50)
-                );
-                """;
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.execute();
-        }
-    }
-
-    private void createTableSQLServer() throws SQLException {
-        String sql = """
-                CREATE TABLE cliente (
-                    id INT IDENTITY(1,1) PRIMARY KEY,
-                    nome VARCHAR(100) NOT NULL,
-                    email VARCHAR(100) UNIQUE NOT NULL,
-                    telefone INT,
-                    endereco_logradouro VARCHAR(150),
-                    endereco_cep VARCHAR(9),
-                    endereco_num INT,
-                    endereco_complemento VARCHAR(50)
-                );
-                """;
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.execute();
-        }
-    }
-
-    private boolean tableExists(String tableName) throws SQLException {
-        DatabaseMetaData meta = c.getMetaData();
-        try (ResultSet rs = meta.getTables(null, null, tableName, new String[]{"TABLE"})) {
-            return rs.next();
-        }
-    }
-
 
     @Override
     public void add(Cliente cliente) throws SQLException {
