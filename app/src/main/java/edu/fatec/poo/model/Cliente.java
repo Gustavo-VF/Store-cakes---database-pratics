@@ -73,4 +73,18 @@ public class Cliente {
     public void setComplemento(String complemento) {
         this.complemento = complemento;
     }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "Id=" + Id +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", telefone=" + telefone +
+                ", enderecoLogradouro='" + enderecoLogradouro + '\'' +
+                ", enderecoCep='" + enderecoCep + '\'' +
+                ", enderecoNum=" + enderecoNum +
+                ", complemento='" + complemento + '\'' +
+                '}';
+    }
 }
