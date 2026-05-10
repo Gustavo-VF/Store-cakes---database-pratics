@@ -1,6 +1,6 @@
 package edu.fatec.poo.model;
 
-public class Cliente {
+public class Cliente implements IEntity {
     private long Id;
     private String nome;
     private String email;
@@ -10,10 +10,12 @@ public class Cliente {
     private int enderecoNum;
     private String complemento;
 
+    @Override
     public long getId() {
         return Id;
     }
 
+    @Override
     public void setId(long id) {
         Id = id;
     }
