@@ -23,9 +23,10 @@ public class UIPerfil extends Application {
         launch(args);
     }
 
+    @Override
     public void start(Stage stage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/UIPerfil.fxml"));        
 
+        Parent root = FXMLLoader.load(getClass().getResource("/UIPerfil.fxml"));        
         Scene cena = new Scene(root);
 
         stage.setTitle("Perfil");

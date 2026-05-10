@@ -21,6 +21,7 @@ public class CadastroController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/UILogin.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setTitle("Login");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {

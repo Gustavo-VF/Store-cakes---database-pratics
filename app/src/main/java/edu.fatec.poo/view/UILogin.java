@@ -32,7 +32,7 @@ public class UILogin  extends Application{
         Parent root = FXMLLoader.load(getClass().getResource("/UILogin.fxml"));        
         Scene cena = new Scene(root);
        
-        stage.setTitle("Tela de Login");
+        stage.setTitle("Login");
         stage.setScene(cena);
         stage.show();
 
