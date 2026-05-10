@@ -1,17 +1,17 @@
 package edu.fatec.poo.persistence;
 
-import edu.fatec.poo.model.User;
+import edu.fatec.poo.model.Cliente;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDao implements Dao<User> {
+public class ClienteIDao implements IDao<Cliente> {
 
     private final Connection c;
 
-    public UserDao(DaoConnection daoConnection) throws SQLException, ClassNotFoundException {
-        c = daoConnection.getConnection();
+    public ClienteIDao(IDaoConnection IDaoConnection) throws SQLException, ClassNotFoundException {
+        c = IDaoConnection.getConnection();
 
         initDatabase();
     }
@@ -20,7 +20,7 @@ public class UserDao implements Dao<User> {
         DatabaseMetaData meta = c.getMetaData();
         String dbName = meta.getDatabaseProductName().toLowerCase();
 
-        if (!tableExists("user")) {
+        if (!tableExists("cliente")) {
             if (dbName.contains("microsoft")) {
                 createTableSQLServer();
             } else if (dbName.contains("mysql") || dbName.contains("mariadb")) {
@@ -33,7 +33,7 @@ public class UserDao implements Dao<User> {
 
     private void createTableMySQL() throws SQLException {
         String sql = """
-                CREATE TABLE user (
+                CREATE TABLE cliente (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     nome VARCHAR(100) NOT NULL,
                     email VARCHAR(100) UNIQUE NOT NULL,
@@ -51,7 +51,7 @@ public class UserDao implements Dao<User> {
 
     private void createTableSQLServer() throws SQLException {
         String sql = """
-                CREATE TABLE [user] (
+                CREATE TABLE cliente (
                     id INT IDENTITY(1,1) PRIMARY KEY,
                     nome VARCHAR(100) NOT NULL,
                     email VARCHAR(100) UNIQUE NOT NULL,
@@ -76,54 +76,54 @@ public class UserDao implements Dao<User> {
 
 
     @Override
-    public void add(User user) throws SQLException {
+    public void add(Cliente cliente) throws SQLException {
         //TODO
         String sql = """
-                INSERT INTO user
+                INSERT INTO cliente
                 (nome, email, telefone, endereco_logradouro, endereco_cep, endereco_num, endereco_complemento)
                 VALUES
                 (?,?,?,?,?,?,?);
                 """;
         try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setString(1, user.getNome());
-            ps.setString(2, user.getEmail());
-            ps.setInt(3, user.getTelefone());
-            ps.setString(4, user.getEnderecoLogradouro());
-            ps.setString(5, user.getEnderecoCep());
-            ps.setInt(6, user.getEnderecoNum());
-            ps.setString(7, user.getComplemento());
+            ps.setString(1, cliente.getNome());
+            ps.setString(2, cliente.getEmail());
+            ps.setInt(3, cliente.getTelefone());
+            ps.setString(4, cliente.getEnderecoLogradouro());
+            ps.setString(5, cliente.getEnderecoCep());
+            ps.setInt(6, cliente.getEnderecoNum());
+            ps.setString(7, cliente.getComplemento());
 
             ps.execute();
         }
     }
 
     @Override
-    public User search(User user) throws SQLException {
-        return searchByField("id", user.getId());
+    public Cliente search(Cliente cliente) throws SQLException {
+        return searchByField("id", cliente.getId());
     }
 
     @Override
-    public User searchById(Long id) throws SQLException {
+    public Cliente searchById(Long id) throws SQLException {
         return searchByField("id", id);
     }
 
-    public User searchByEmail(String email) throws SQLException {
+    public Cliente searchByEmail(String email) throws SQLException {
         return searchByField("email", email);
     }
 
-    public User searchByNome(String nome) throws SQLException {
+    public Cliente searchByNome(String nome) throws SQLException {
         return searchByField("nome", nome);
     }
 
-    private User searchByField(String fieldName, Object value) throws SQLException {
-        String sql = "SELECT * FROM user WHERE " + fieldName + " = ?;";
+    private Cliente searchByField(String fieldName, Object value) throws SQLException {
+        String sql = "SELECT * FROM cliente WHERE " + fieldName + " = ?;";
         try (PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setObject(1, value);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    User user = new User();
-                    map(user, rs);
-                    return user;
+                    Cliente cliente = new Cliente();
+                    map(cliente, rs);
+                    return cliente;
                 }
             }
         }
@@ -131,9 +131,9 @@ public class UserDao implements Dao<User> {
     }
 
     @Override
-    public void update(User user) throws SQLException {
+    public void update(Cliente cliente) throws SQLException {
         String sql = """
-                UPDATE user SET
+                UPDATE cliente SET
                 nome = ?, 
                 email = ?, 
                 telefone = ?, 
@@ -145,59 +145,59 @@ public class UserDao implements Dao<User> {
                 """;
 
         try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setString(1, user.getNome());
-            ps.setString(2, user.getEmail());
-            ps.setInt(3, user.getTelefone());
-            ps.setString(4, user.getEnderecoLogradouro());
-            ps.setString(5, user.getEnderecoCep());
-            ps.setInt(6, user.getEnderecoNum());
-            ps.setString(7, user.getComplemento());
-            ps.setLong(8, user.getId());
+            ps.setString(1, cliente.getNome());
+            ps.setString(2, cliente.getEmail());
+            ps.setInt(3, cliente.getTelefone());
+            ps.setString(4, cliente.getEnderecoLogradouro());
+            ps.setString(5, cliente.getEnderecoCep());
+            ps.setInt(6, cliente.getEnderecoNum());
+            ps.setString(7, cliente.getComplemento());
+            ps.setLong(8, cliente.getId());
 
             ps.execute();
         }
     }
 
     @Override
-    public void delete(User user) throws SQLException {
-        String sql = "DELETE FROM user WHERE id = ?;";
+    public void delete(Cliente cliente) throws SQLException {
+        String sql = "DELETE FROM cliente WHERE id = ?;";
         try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setLong(1, user.getId());
+            ps.setLong(1, cliente.getId());
 
             ps.execute();
         }
     }
 
     @Override
-    public List<User> searchAll() throws SQLException {
-        return executeQuery("SELECT * FROM user;");
+    public List<Cliente> searchAll() throws SQLException {
+        return executeQuery("SELECT * FROM cliente;");
     }
 
-    public List<User> searchAllSortedByName() throws SQLException {
-        return executeQuery("SELECT * FROM user ORDER BY nome ASC;");
+    public List<Cliente> searchAllSortedByName() throws SQLException {
+        return executeQuery("SELECT * FROM cliente ORDER BY nome ASC;");
     }
 
-    private List<User> executeQuery(String sql) throws SQLException {
-        List<User> users = new ArrayList<>();
+    private List<Cliente> executeQuery(String sql) throws SQLException {
+        List<Cliente> clientes = new ArrayList<>();
         try (PreparedStatement ps = c.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                User user = new User();
-                map(user, rs);
-                users.add(user);
+                Cliente cliente = new Cliente();
+                map(cliente, rs);
+                clientes.add(cliente);
             }
         }
-        return users;
+        return clientes;
     }
 
-    private void map(User user, ResultSet resultSet) throws SQLException {
-        user.setId(resultSet.getInt("id"));
-        user.setNome(resultSet.getString("nome"));
-        user.setEmail(resultSet.getString("email"));
-        user.setTelefone(resultSet.getInt("telefone"));
-        user.setEnderecoLogradouro(resultSet.getString("endereco_logradouro"));
-        user.setEnderecoCep(resultSet.getString("endereco_cep"));
-        user.setEnderecoNum(resultSet.getInt("endereco_num"));
-        user.setComplemento(resultSet.getString("endereco_complemento"));
+    private void map(Cliente cliente, ResultSet resultSet) throws SQLException {
+        cliente.setId(resultSet.getInt("id"));
+        cliente.setNome(resultSet.getString("nome"));
+        cliente.setEmail(resultSet.getString("email"));
+        cliente.setTelefone(resultSet.getInt("telefone"));
+        cliente.setEnderecoLogradouro(resultSet.getString("endereco_logradouro"));
+        cliente.setEnderecoCep(resultSet.getString("endereco_cep"));
+        cliente.setEnderecoNum(resultSet.getInt("endereco_num"));
+        cliente.setComplemento(resultSet.getString("endereco_complemento"));
     }
 }

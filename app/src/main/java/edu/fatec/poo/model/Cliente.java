@@ -1,6 +1,6 @@
 package edu.fatec.poo.model;
 
-public class User {
+public class Cliente {
     private long Id;
     private String nome;
     private String email;
