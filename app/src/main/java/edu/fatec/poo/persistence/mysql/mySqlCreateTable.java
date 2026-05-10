@@ -1,5 +1,6 @@
 package edu.fatec.poo.persistence.mysql;
 
+import edu.fatec.poo.persistence.ADaoConnection;
 import edu.fatec.poo.persistence.ICreateTable;
 import edu.fatec.poo.persistence.IDaoConnection;
 
@@ -9,8 +10,8 @@ public class mySqlCreateTable implements ICreateTable {
 
     private final Connection c;
 
-    public mySqlCreateTable(IDaoConnection IDaoConnection) throws SQLException, ClassNotFoundException {
-        c = IDaoConnection.getConnection();
+    public mySqlCreateTable(ADaoConnection aDaoConnection) throws SQLException, ClassNotFoundException {
+        c = aDaoConnection.getC();
     }
 
     @Override

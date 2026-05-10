@@ -10,8 +10,8 @@ public class ClienteIDao implements IDao<Cliente> {
 
     private final Connection c;
 
-    public ClienteIDao(IDaoConnection IDaoConnection) throws SQLException, ClassNotFoundException {
-        c = IDaoConnection.getConnection();
+    public ClienteIDao(ADaoConnection aDaoConnection) throws SQLException, ClassNotFoundException {
+        c = aDaoConnection.getC();
     }
 
     @Override

@@ -24,7 +24,10 @@ public abstract class ADaoConnection implements IDaoConnection {
         c.close();
     }
 
-    public Connection getC() {
+    public Connection getC() throws SQLException, ClassNotFoundException {
+        if (c == null) {
+            getConnection();
+        }
         return c;
     }
 

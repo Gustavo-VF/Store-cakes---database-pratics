@@ -1,16 +1,18 @@
 package edu.fatec.poo.persistence.sqlServer;
 
+import edu.fatec.poo.persistence.ADaoConnection;
 import edu.fatec.poo.persistence.ICreateTable;
 import edu.fatec.poo.persistence.IDaoConnection;
 
 import java.sql.*;
+import java.util.ArrayDeque;
 
 public class sqlServerCreateTable implements ICreateTable {
 
     private final Connection c;
 
-    public sqlServerCreateTable(IDaoConnection IDaoConnection) throws SQLException, ClassNotFoundException {
-        c = IDaoConnection.getConnection();
+    public sqlServerCreateTable(ADaoConnection aDaoConnection) throws SQLException, ClassNotFoundException {
+        c = aDaoConnection.getC();
     }
 
     @Override
