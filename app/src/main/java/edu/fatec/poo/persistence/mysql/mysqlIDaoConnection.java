@@ -20,7 +20,7 @@ public class mysqlIDaoConnection extends ADaoConnection {
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         String url = String.format(
-                "jdbc:mysql://%s:3306/%s?useTimezone=true&serverTimezone=UTC&useSSL=false",
+                "jdbc:mysql://%s:3306/%s?allowPublicKeyRetrieval=true&useTimezone=true&serverTimezone=UTC&useSSL=false",
                 hostname, dbName
         );
 
