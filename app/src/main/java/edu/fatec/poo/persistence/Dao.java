@@ -9,51 +9,59 @@ import java.util.List;
  *
  * @param <T> O tipo da entidade que será manipulada por esta interface.
  * @author Seu Nome
- * @version 1.0
+ * @version 1.1
  */
 public interface Dao<T> {
 
     /**
      * Persiste um novo objeto no banco de dados.
      *
-     * @param object O objeto a ser adicionado.
-     * @throws SQLException Se ocorrer um erro durante o acesso ao banco de dados.
+     * @param object O objeto contendo os dados a serem inseridos.
+     * @throws SQLException Se ocorrer um erro durante a execução da query SQL.
      */
-    public void add(T object) throws SQLException;
+    void add(T object) throws SQLException;
 
     /**
-     * Realiza a busca de um objeto específico.
+     * Realiza a busca de um objeto específico com base em atributos preenchidos.
      * Geralmente utiliza um atributo identificador presente no objeto de exemplo.
      *
-     * @param object O objeto contendo os critérios de busca (ex: ID).
-     * @return O objeto encontrado com os dados carregados do banco,
-     * ou {@code null} caso não seja localizado.
+     * @param object O objeto contendo os critérios de busca (ex: objeto com ID setado).
+     * @return O objeto preenchido com os dados do banco, ou {@code null} se não encontrado.
      * @throws SQLException Se ocorrer um erro durante o acesso ao banco de dados.
      */
-    public T search(T object) throws SQLException;
+    T search(T object) throws SQLException;
 
     /**
-     * Atualiza os dados de um objeto já existente no banco de dados.
+     * Localiza um registro através do seu identificador único (Primary Key).
      *
-     * @param object O objeto com os novos dados a serem persistidos.
-     * @throws SQLException Se ocorrer um erro durante o acesso ao banco de dados.
+     * @param id O identificador único do registro no banco de dados.
+     * @return O objeto correspondente ao ID informado, ou {@code null} se não encontrado.
+     * @throws SQLException Se ocorrer um erro durante a execução da busca.
      */
-    public void update(T object) throws SQLException;
+    T searchById(Long id) throws SQLException;
 
     /**
-     * Remove um registro do banco de dados.
+     * Atualiza os dados de um registro existente no banco de dados.
      *
-     * @param object O objeto a ser excluído.
-     * @throws SQLException Se ocorrer um erro durante o acesso ao banco de dados.
+     * @param object O objeto contendo o ID do registro e os novos valores.
+     * @throws SQLException Se ocorrer um erro durante a atualização dos dados.
      */
-    public void delete(T object) throws SQLException;
+    void update(T object) throws SQLException;
 
     /**
-     * Recupera todos os registros da entidade armazenados no banco de dados.
+     * Remove um registro do banco de dados de forma permanente.
      *
-     * @return Uma {@link List} contendo todos os objetos encontrados,
-     * ou uma lista vazia se não houver registros.
-     * @throws SQLException Se ocorrer um erro durante o acesso ao banco de dados.
+     * @param object O objeto (ou critério) que identifica o registro a ser excluído.
+     * @throws SQLException Se ocorrer um erro durante a exclusão.
      */
-    public List<T> searchAll() throws SQLException;
+    void delete(T object) throws SQLException;
+
+    /**
+     * Recupera todos os registros da entidade armazenados na tabela correspondente.
+     *
+     * @return Uma {@link List} contendo todos os registros encontrados,
+     * ou uma lista vazia caso a tabela esteja vazia.
+     * @throws SQLException Se ocorrer um erro durante a recuperação dos dados.
+     */
+    List<T> searchAll() throws SQLException;
 }
