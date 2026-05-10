@@ -8,6 +8,7 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
 repositories {
@@ -16,6 +17,10 @@ repositories {
 }
 
 dependencies {
+    // Driver para o sqlServer
+    implementation("net.sourceforge.jtds:jtds:1.3.1")
+    // Driver para o mySql -- Vou tentar adicionar ele
+    implementation("mysql:mysql-connector-java:8.0.33")
     // Use JUnit Jupiter for testing.
     testImplementation(libs.junit.jupiter)
 
@@ -32,6 +37,19 @@ java {
     }
 }
 
+javafx {
+    version = "21"
+    modules(
+        "javafx.controls",
+        "javafx.fxml",
+        "javafx.graphics",
+        "javafx.base",
+        // "javafx.media",
+        // "javafx.web",
+        // "javafx.swing"
+    )
+}
+
 application {
     // Define the main class for the application.
     mainClass = "edu.fatec.poo.view.UILogin"
@@ -40,4 +58,10 @@ application {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+tasks.named<JavaExec>("run") {
+    notCompatibleWithConfigurationCache(
+        "O plugin JavaFx 0.1.0 ainda nào suporta ConfigurationCache nesta versão do Gradle"
+    )
 }
