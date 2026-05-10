@@ -16,11 +16,11 @@ public class sqlServerIDaoConnection extends ADaoConnection {
     @Override
     public Connection getConnection()
             throws ClassNotFoundException, SQLException {
-        Class.forName("net.sorceforge.jtds.jdbc.Driver");
+        Class.forName("net.sourceforge.jtds.jdbc.Driver");
 
         c = DriverManager.getConnection(
                 String.format(
-                        "jdbc:jdts:sqlserver://%s:1433;databaseName=%s;user=%s;password=%s",
+                        "jdbc:jtds:sqlserver://%s:1433;databaseName=%s;user=%s;password=%s",
                         hostname, dbName, user, senha
                 )
         );
