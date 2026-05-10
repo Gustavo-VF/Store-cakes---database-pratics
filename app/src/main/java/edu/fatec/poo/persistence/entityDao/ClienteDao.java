@@ -7,12 +7,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteIDao implements IDao<Cliente> {
+public class ClienteDao extends GenericDao<Cliente> implements IDao<Cliente> {
 
-    private final Connection c;
-
-    public ClienteIDao(ADaoConnection aDaoConnection) throws SQLException, ClassNotFoundException {
-        c = aDaoConnection.getC();
+    public ClienteDao(ADaoConnection aDaoConnection) throws SQLException, ClassNotFoundException {
+        super(aDaoConnection, "cliente");
     }
 
     @Override
@@ -24,7 +22,7 @@ public class ClienteIDao implements IDao<Cliente> {
                 VALUES
                 (?,?,?,?,?,?,?);
                 """;
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, cliente.getNome());
             ps.setString(2, cliente.getEmail());
             ps.setInt(3, cliente.getTelefone());
@@ -37,16 +35,6 @@ public class ClienteIDao implements IDao<Cliente> {
         }
     }
 
-    @Override
-    public Cliente search(Cliente cliente) throws SQLException {
-        return searchByField("id", cliente.getId());
-    }
-
-    @Override
-    public Cliente searchById(Long id) throws SQLException {
-        return searchByField("id", id);
-    }
-
     public Cliente searchByEmail(String email) throws SQLException {
         return searchByField("email", email);
     }
@@ -55,15 +43,13 @@ public class ClienteIDao implements IDao<Cliente> {
         return searchByField("nome", nome);
     }
 
-    private Cliente searchByField(String fieldName, Object value) throws SQLException {
+    private Cliente searchByField(String fieldName, Object valor) throws SQLException {
         String sql = "SELECT * FROM cliente WHERE " + fieldName + " = ?;";
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setObject(1, value);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setObject(1, valor);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Cliente cliente = new Cliente();
-                    map(cliente, rs);
-                    return cliente;
+                    return map(rs);
                 }
             }
         }
@@ -84,53 +70,31 @@ public class ClienteIDao implements IDao<Cliente> {
                 WHERE id = ?;
                 """;
 
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setString(1, cliente.getNome());
-            ps.setString(2, cliente.getEmail());
-            ps.setInt(3, cliente.getTelefone());
-            ps.setString(4, cliente.getEnderecoLogradouro());
-            ps.setString(5, cliente.getEnderecoCep());
-            ps.setInt(6, cliente.getEnderecoNum());
-            ps.setString(7, cliente.getComplemento());
-            ps.setLong(8, cliente.getId());
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            List<Object> parametros = getParameters(cliente);
+            parametros.add(cliente.getId());
+            for (int i = 0; i < parametros.size(); i++) {
+                ps.setObject(i + 1, parametros.get(i));
+            }
 
             ps.execute();
         }
     }
 
-    @Override
-    public void delete(Cliente cliente) throws SQLException {
-        String sql = "DELETE FROM cliente WHERE id = ?;";
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setLong(1, cliente.getId());
-
-            ps.execute();
-        }
-    }
-
-    @Override
-    public List<Cliente> searchAll() throws SQLException {
-        return executeQuery("SELECT * FROM cliente;");
-    }
-
-    public List<Cliente> searchAllSortedByName() throws SQLException {
-        return executeQuery("SELECT * FROM cliente ORDER BY nome ASC;");
-    }
-
-    private List<Cliente> executeQuery(String sql) throws SQLException {
+    private List<Cliente> searchAllSortedByName() throws SQLException {
+        String sql = "SELECT * FROM cliente ORDER BY nome ASC;";
         List<Cliente> clientes = new ArrayList<>();
-        try (PreparedStatement ps = c.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Cliente cliente = new Cliente();
-                map(cliente, rs);
-                clientes.add(cliente);
+                clientes.add(map(rs));
             }
         }
         return clientes;
     }
 
-    private void map(Cliente cliente, ResultSet resultSet) throws SQLException {
+    public Cliente map(ResultSet resultSet) throws SQLException {
+        Cliente cliente = new Cliente();
         cliente.setId(resultSet.getInt("id"));
         cliente.setNome(resultSet.getString("nome"));
         cliente.setEmail(resultSet.getString("email"));
@@ -139,5 +103,19 @@ public class ClienteIDao implements IDao<Cliente> {
         cliente.setEnderecoCep(resultSet.getString("endereco_cep"));
         cliente.setEnderecoNum(resultSet.getInt("endereco_num"));
         cliente.setComplemento(resultSet.getString("endereco_complemento"));
+        return cliente;
+    }
+
+    @Override
+    protected ArrayList<Object> getParameters(Cliente cliente) {
+        ArrayList<Object> parametros = new ArrayList<>();
+        parametros.add(cliente.getNome());
+        parametros.add(cliente.getEmail());
+        parametros.add(cliente.getTelefone());
+        parametros.add(cliente.getEnderecoLogradouro());
+        parametros.add(cliente.getEnderecoCep());
+        parametros.add(cliente.getEnderecoNum());
+        parametros.add(cliente.getComplemento());
+        return parametros;
     }
 }
