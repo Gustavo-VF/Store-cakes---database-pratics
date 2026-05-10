@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public abstract class ADaoConnection implements IDaoConnection {
 
-    protected Connection c;
+    protected Connection connection;
 
     protected String hostname;
     protected String dbName;
@@ -21,23 +21,18 @@ public abstract class ADaoConnection implements IDaoConnection {
 
     @Override
     public void closeConnection() throws ClassNotFoundException, SQLException {
-        c.close();
+        connection.close();
     }
 
-    @Override
-    public Connection getConnection() throws ClassNotFoundException, SQLException {
-        return getC();
-    }
-
-    public Connection getC() throws SQLException, ClassNotFoundException {
-        if (c == null) {
-            getConnection();
+    public Connection getSafeConnection() throws SQLException, ClassNotFoundException {
+        if (connection == null) {
+            this.connection = getConnection();
         }
-        return c;
+        return connection;
     }
 
-    public void setC(Connection c) {
-        this.c = c;
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 
     public String getHostname() {

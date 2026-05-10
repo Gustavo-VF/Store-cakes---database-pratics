@@ -1,7 +1,6 @@
 package edu.fatec.poo.persistence.mysql;
 
 import edu.fatec.poo.persistence.ADaoConnection;
-import edu.fatec.poo.persistence.IDaoConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,9 +23,9 @@ public class mysqlIDaoConnection extends ADaoConnection {
                 hostname, dbName
         );
 
-        c = DriverManager.getConnection(url, user, senha);
+        connection = DriverManager.getConnection(url, user, senha);
 
-        return c;
+        return connection;
     }
 
 }

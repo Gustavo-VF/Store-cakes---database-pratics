@@ -13,7 +13,7 @@ public abstract class GenericDao<T extends IEntity> implements IDao<T> {
     protected String tableName;
 
     public GenericDao(ADaoConnection aDaoConnection, String tableName) throws SQLException, ClassNotFoundException {
-        this.connection = aDaoConnection.getC();
+        this.connection = aDaoConnection.getSafeConnection();
         this.tableName = tableName;
     }
 

@@ -10,7 +10,7 @@ public class mySqlCreateTable implements ICreateTable {
     private final Connection c;
 
     public mySqlCreateTable(ADaoConnection aDaoConnection) throws SQLException, ClassNotFoundException {
-        c = aDaoConnection.getC();
+        c = aDaoConnection.getSafeConnection();
     }
 
     @Override

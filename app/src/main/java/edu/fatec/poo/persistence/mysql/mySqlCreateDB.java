@@ -12,7 +12,7 @@ public class mySqlCreateDB implements ICreateDB {
     private final Connection c;
 
     public mySqlCreateDB(ADaoConnection aDaoConnection) throws SQLException, ClassNotFoundException {
-        c = aDaoConnection.getC();
+        c = aDaoConnection.getSafeConnection();
     }
 
     @Override

@@ -10,7 +10,7 @@ public class sqlServerCreateTable implements ICreateTable {
     private final Connection c;
 
     public sqlServerCreateTable(ADaoConnection aDaoConnection) throws SQLException, ClassNotFoundException {
-        c = aDaoConnection.getC();
+        c = aDaoConnection.getSafeConnection();
     }
 
     @Override

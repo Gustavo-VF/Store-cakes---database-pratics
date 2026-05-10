@@ -1,7 +1,6 @@
 package edu.fatec.poo.persistence.sqlServer;
 
 import edu.fatec.poo.persistence.ADaoConnection;
-import edu.fatec.poo.persistence.IDaoConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,13 +17,13 @@ public class sqlServerIDaoConnection extends ADaoConnection {
             throws ClassNotFoundException, SQLException {
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
 
-        c = DriverManager.getConnection(
+        connection = DriverManager.getConnection(
                 String.format(
                         "jdbc:jtds:sqlserver://%s:1433;databaseName=%s;user=%s;password=%s",
                         hostname, dbName, user, senha
                 )
         );
 
-        return c;
+        return connection;
     }
 }
