@@ -2,10 +2,7 @@ package edu.fatec.poo.persistence;
 
 import edu.fatec.poo.model.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +12,68 @@ public class UserDao implements Dao<User> {
 
     public UserDao(DaoConnection daoConnection) throws SQLException, ClassNotFoundException {
         c = daoConnection.getConnection();
+
+        initDatabase();
     }
+
+    private void initDatabase() throws SQLException {
+        DatabaseMetaData meta = c.getMetaData();
+        String dbName = meta.getDatabaseProductName().toLowerCase();
+
+        if (!tableExists("user")) {
+            if (dbName.contains("microsoft")) {
+                createTableSQLServer();
+            } else if (dbName.contains("mysql") || dbName.contains("mariadb")) {
+                createTableMySQL();
+            } else {
+                throw new SQLException("Banco de dados '" + dbName + "' não configurado para inicialização automática.");
+            }
+        }
+    }
+
+    private void createTableMySQL() throws SQLException {
+        String sql = """
+                CREATE TABLE user (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    nome VARCHAR(100) NOT NULL,
+                    email VARCHAR(100) UNIQUE NOT NULL,
+                    telefone INT,
+                    endereco_logradouro VARCHAR(150),
+                    endereco_cep VARCHAR(9),
+                    endereco_num INT,
+                    endereco_complemento VARCHAR(50)
+                );
+                """;
+        try (PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.execute();
+        }
+    }
+
+    private void createTableSQLServer() throws SQLException {
+        String sql = """
+                CREATE TABLE [user] (
+                    id INT IDENTITY(1,1) PRIMARY KEY,
+                    nome VARCHAR(100) NOT NULL,
+                    email VARCHAR(100) UNIQUE NOT NULL,
+                    telefone INT,
+                    endereco_logradouro VARCHAR(150),
+                    endereco_cep VARCHAR(9),
+                    endereco_num INT,
+                    endereco_complemento VARCHAR(50)
+                );
+                """;
+        try (PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.execute();
+        }
+    }
+
+    private boolean tableExists(String tableName) throws SQLException {
+        DatabaseMetaData meta = c.getMetaData();
+        try (ResultSet rs = meta.getTables(null, null, tableName, new String[]{"TABLE"})) {
+            return rs.next();
+        }
+    }
+
 
     @Override
     public void add(User user) throws SQLException {
@@ -41,20 +99,35 @@ public class UserDao implements Dao<User> {
 
     @Override
     public User search(User user) throws SQLException {
-        String sql = "SELECT * FROM user WHERE id = ?;";
+        return searchByField("id", user.getId());
+    }
 
-        try (PreparedStatement preparedStatement = c.prepareStatement(sql)) {
-            preparedStatement.setLong(1, user.getId());
+    @Override
+    public User searchById(Long id) throws SQLException {
+        return searchByField("id", id);
+    }
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    map(user, resultSet);
-                } else {
-                    user = null;
+    public User searchByEmail(String email) throws SQLException {
+        return searchByField("email", email);
+    }
+
+    public User searchByNome(String nome) throws SQLException {
+        return searchByField("nome", nome);
+    }
+
+    private User searchByField(String fieldName, Object value) throws SQLException {
+        String sql = "SELECT * FROM user WHERE " + fieldName + " = ?;";
+        try (PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setObject(1, value);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    User user = new User();
+                    map(user, rs);
+                    return user;
                 }
             }
         }
-        return user;
+        return null;
     }
 
     @Override
@@ -97,18 +170,21 @@ public class UserDao implements Dao<User> {
 
     @Override
     public List<User> searchAll() throws SQLException {
+        return executeQuery("SELECT * FROM user;");
+    }
+
+    public List<User> searchAllSortedByName() throws SQLException {
+        return executeQuery("SELECT * FROM user ORDER BY nome ASC;");
+    }
+
+    private List<User> executeQuery(String sql) throws SQLException {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM user;";
-
-        try (PreparedStatement preparedStatement = c.prepareStatement(sql)) {
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-
-                while (resultSet.next()) {
-                    User user = new User();
-                    map(user, resultSet);
-                    users.add(user);
-                }
+        try (PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                User user = new User();
+                map(user, rs);
+                users.add(user);
             }
         }
         return users;
