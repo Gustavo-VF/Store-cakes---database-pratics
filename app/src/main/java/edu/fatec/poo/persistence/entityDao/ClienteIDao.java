@@ -1,6 +1,7 @@
-package edu.fatec.poo.persistence;
+package edu.fatec.poo.persistence.entityDao;
 
 import edu.fatec.poo.model.Cliente;
+import edu.fatec.poo.persistence.ADaoConnection;
 
 import java.sql.*;
 import java.util.ArrayList;

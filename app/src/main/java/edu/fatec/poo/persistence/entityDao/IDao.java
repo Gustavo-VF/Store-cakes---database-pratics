@@ -1,4 +1,4 @@
-package edu.fatec.poo.persistence;
+package edu.fatec.poo.persistence.entityDao;
 
 import java.sql.SQLException;
 import java.util.List;
