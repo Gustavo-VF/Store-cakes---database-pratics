@@ -2,7 +2,6 @@ package edu.fatec.poo.persistence.mysql;
 
 import edu.fatec.poo.persistence.ADaoConnection;
 import edu.fatec.poo.persistence.ICreateTable;
-import edu.fatec.poo.persistence.IDaoConnection;
 
 import java.sql.*;
 
@@ -23,13 +22,13 @@ public class mySqlCreateTable implements ICreateTable {
     }
 
     @Override
-    public void createAll() throws SQLException {
-        createCliente();
+    public void createTableAll() throws SQLException {
+        createTabelCliente();
         //TODO
     }
 
     @Override
-    public void createCliente() throws SQLException {
+    public void createTabelCliente() throws SQLException {
         String sql = """
                 CREATE TABLE cliente (
                     id INT AUTO_INCREMENT PRIMARY KEY,

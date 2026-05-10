@@ -2,10 +2,8 @@ package edu.fatec.poo.persistence.sqlServer;
 
 import edu.fatec.poo.persistence.ADaoConnection;
 import edu.fatec.poo.persistence.ICreateTable;
-import edu.fatec.poo.persistence.IDaoConnection;
 
 import java.sql.*;
-import java.util.ArrayDeque;
 
 public class sqlServerCreateTable implements ICreateTable {
 
@@ -22,15 +20,15 @@ public class sqlServerCreateTable implements ICreateTable {
             return rs.next();
         }
     }
-
+    
     @Override
-    public void createAll() throws SQLException {
-        createCliente();
+    public void createTableAll() throws SQLException {
+        createTabelCliente();
         //TODO
     }
 
     @Override
-    public void createCliente() throws SQLException {
+    public void createTabelCliente() throws SQLException {
         String sql = """
                 CREATE TABLE cliente (
                     id INT IDENTITY(1,1) PRIMARY KEY,
