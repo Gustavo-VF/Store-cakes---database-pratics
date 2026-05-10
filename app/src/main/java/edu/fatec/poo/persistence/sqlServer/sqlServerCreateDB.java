@@ -26,8 +26,7 @@ public class sqlServerCreateDB implements ICreateDB {
             st.executeUpdate(sql);
             System.out.println("[SQL Server] Operação de criação concluída ou banco já existente.");
         } catch (SQLException e) {
-            // O SQL Server pode exigir que você esteja no banco 'master' para executar isso
-            System.err.println("Erro ao criar banco no SQL Server: " + e.getMessage());
+            System.err.println("[SQL Server] Erro ao criar banco no: " + e.getMessage());
             throw e;
         }
     }

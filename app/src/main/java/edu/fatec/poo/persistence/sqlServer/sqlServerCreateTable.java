@@ -20,7 +20,7 @@ public class sqlServerCreateTable implements ICreateTable {
             return rs.next();
         }
     }
-    
+
     @Override
     public void createTableAll() throws SQLException {
         createTabelCliente();
@@ -46,6 +46,10 @@ public class sqlServerCreateTable implements ICreateTable {
                 """;
         try (PreparedStatement ps = c.prepareStatement(sql)) {
             ps.execute();
+            System.out.println("[SQL Server] Tabela Cliente criada com sucesso ou já existente.");
+        } catch (SQLException e) {
+            System.err.println("[SQL Server] Erro ao criar tabela Cliente no: " + e.getMessage());
+            throw e;
         }
     }
 }

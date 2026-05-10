@@ -43,6 +43,10 @@ public class mySqlCreateTable implements ICreateTable {
                 """;
         try (PreparedStatement ps = c.prepareStatement(sql)) {
             ps.execute();
+            System.out.println("[MySQL] Tabela Cliente criada com sucesso ou já existente.");
+        } catch (SQLException e) {
+            System.err.println("[MySQL] Erro ao criar tabela Cliente no: " + e.getMessage());
+            throw e;
         }
     }
 }

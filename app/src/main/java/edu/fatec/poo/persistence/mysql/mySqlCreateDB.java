@@ -25,7 +25,7 @@ public class mySqlCreateDB implements ICreateDB {
             st.executeUpdate(sql);
             System.out.println("[MySQL] Banco criado com sucesso ou já existente.");
         } catch (SQLException e) {
-            System.err.println("Erro ao criar banco no MySQL: " + e.getMessage());
+            System.err.println("[MySQL] Erro ao criar banco no: " + e.getMessage());
             throw e;
         }
     }
