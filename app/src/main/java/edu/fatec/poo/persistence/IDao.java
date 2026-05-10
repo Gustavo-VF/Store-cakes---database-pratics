@@ -11,7 +11,7 @@ import java.util.List;
  * @author Seu Nome
  * @version 1.1
  */
-public interface Dao<T> {
+public interface IDao<T> {
 
     /**
      * Persiste um novo objeto no banco de dados.
@@ -19,7 +19,7 @@ public interface Dao<T> {
      * @param object O objeto contendo os dados a serem inseridos.
      * @throws SQLException Se ocorrer um erro durante a execução da query SQL.
      */
-    void add(T object) throws SQLException;
+    public void add(T object) throws SQLException;
 
     /**
      * Realiza a busca de um objeto específico com base em atributos preenchidos.
@@ -29,7 +29,7 @@ public interface Dao<T> {
      * @return O objeto preenchido com os dados do banco, ou {@code null} se não encontrado.
      * @throws SQLException Se ocorrer um erro durante o acesso ao banco de dados.
      */
-    T search(T object) throws SQLException;
+    public T search(T object) throws SQLException;
 
     /**
      * Localiza um registro através do seu identificador único (Primary Key).
@@ -38,7 +38,7 @@ public interface Dao<T> {
      * @return O objeto correspondente ao ID informado, ou {@code null} se não encontrado.
      * @throws SQLException Se ocorrer um erro durante a execução da busca.
      */
-    T searchById(Long id) throws SQLException;
+    public T searchById(Long id) throws SQLException;
 
     /**
      * Atualiza os dados de um registro existente no banco de dados.
@@ -46,7 +46,7 @@ public interface Dao<T> {
      * @param object O objeto contendo o ID do registro e os novos valores.
      * @throws SQLException Se ocorrer um erro durante a atualização dos dados.
      */
-    void update(T object) throws SQLException;
+    public void update(T object) throws SQLException;
 
     /**
      * Remove um registro do banco de dados de forma permanente.
@@ -54,7 +54,7 @@ public interface Dao<T> {
      * @param object O objeto (ou critério) que identifica o registro a ser excluído.
      * @throws SQLException Se ocorrer um erro durante a exclusão.
      */
-    void delete(T object) throws SQLException;
+    public void delete(T object) throws SQLException;
 
     /**
      * Recupera todos os registros da entidade armazenados na tabela correspondente.
@@ -63,5 +63,5 @@ public interface Dao<T> {
      * ou uma lista vazia caso a tabela esteja vazia.
      * @throws SQLException Se ocorrer um erro durante a recuperação dos dados.
      */
-    List<T> searchAll() throws SQLException;
+    public List<T> searchAll() throws SQLException;
 }
