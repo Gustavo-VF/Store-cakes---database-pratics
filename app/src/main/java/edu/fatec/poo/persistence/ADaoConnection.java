@@ -24,6 +24,11 @@ public abstract class ADaoConnection implements IDaoConnection {
         c.close();
     }
 
+    @Override
+    public Connection getConnection() throws ClassNotFoundException, SQLException {
+        return getC();
+    }
+
     public Connection getC() throws SQLException, ClassNotFoundException {
         if (c == null) {
             getConnection();
