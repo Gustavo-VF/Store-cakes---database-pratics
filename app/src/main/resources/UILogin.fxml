@@ -28,7 +28,7 @@
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Button layoutX="401.0" layoutY="278.0" mnemonicParsing="false" text="Entrar">
+                        <Button fx:id="btn_Entrar" layoutX="401.0" layoutY="278.0" mnemonicParsing="false" onMouseClicked="#TestePerfil" text="Entrar">
                            <font>
                               <Font size="20.0" />
                            </font>
