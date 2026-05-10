@@ -8,7 +8,7 @@ import java.util.List;
 
 public class UserDao implements Dao<User> {
 
-    private Connection c;
+    private final Connection c;
 
     public UserDao(DaoConnection daoConnection) throws SQLException, ClassNotFoundException {
         c = daoConnection.getConnection();
