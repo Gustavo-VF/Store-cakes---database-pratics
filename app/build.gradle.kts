@@ -20,7 +20,7 @@ dependencies {
     // Driver para o sqlServer
     implementation("net.sourceforge.jtds:jtds:1.3.1")
     // Driver para o mySql -- Vou tentar adicionar ele
-    implementation("mysql:mysql-connector-java:8.0.33")
+    implementation("com.mysql:mysql-connector-j:9.7.0")
     // Use JUnit Jupiter for testing.
     testImplementation(libs.junit.jupiter)
 
