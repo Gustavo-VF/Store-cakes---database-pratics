@@ -17,9 +17,10 @@ public interface IDao<T> {
      * Persiste um novo objeto no banco de dados.
      *
      * @param object O objeto contendo os dados a serem inseridos.
+     * @return
      * @throws SQLException Se ocorrer um erro durante a execução da query SQL.
      */
-    public void add(T object) throws SQLException;
+    public T add(T object) throws SQLException, ClassNotFoundException;
 
     /**
      * Realiza a busca de um objeto específico com base em atributos preenchidos.
@@ -29,7 +30,7 @@ public interface IDao<T> {
      * @return O objeto preenchido com os dados do banco, ou {@code null} se não encontrado.
      * @throws SQLException Se ocorrer um erro durante o acesso ao banco de dados.
      */
-    public T search(T object) throws SQLException;
+    public T search(T object) throws SQLException, ClassNotFoundException;
 
     /**
      * Localiza um registro através do seu identificador único (Primary Key).
@@ -38,7 +39,7 @@ public interface IDao<T> {
      * @return O objeto correspondente ao ID informado, ou {@code null} se não encontrado.
      * @throws SQLException Se ocorrer um erro durante a execução da busca.
      */
-    public T searchById(Long id) throws SQLException;
+    public T searchById(Long id) throws SQLException, ClassNotFoundException;
 
     /**
      * Atualiza os dados de um registro existente no banco de dados.
@@ -46,7 +47,7 @@ public interface IDao<T> {
      * @param object O objeto contendo o ID do registro e os novos valores.
      * @throws SQLException Se ocorrer um erro durante a atualização dos dados.
      */
-    public void update(T object) throws SQLException;
+    public void update(T object) throws SQLException, ClassNotFoundException;
 
     /**
      * Remove um registro do banco de dados de forma permanente.
@@ -54,7 +55,7 @@ public interface IDao<T> {
      * @param object O objeto (ou critério) que identifica o registro a ser excluído.
      * @throws SQLException Se ocorrer um erro durante a exclusão.
      */
-    public void delete(T object) throws SQLException;
+    public void delete(T object) throws SQLException, ClassNotFoundException;
 
     /**
      * Recupera todos os registros da entidade armazenados na tabela correspondente.
@@ -63,5 +64,5 @@ public interface IDao<T> {
      * ou uma lista vazia caso a tabela esteja vazia.
      * @throws SQLException Se ocorrer um erro durante a recuperação dos dados.
      */
-    public List<T> searchAll() throws SQLException;
+    public List<T> searchAll() throws SQLException, ClassNotFoundException;
 }
