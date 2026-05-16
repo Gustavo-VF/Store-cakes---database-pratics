@@ -22,7 +22,9 @@ public class sqlServerCreateTable implements ICreateTable {
     @Override
     public void createTabelCliente() throws SQLException, ClassNotFoundException {
         String sql = """
-                    CREATE TABLE IF NOT EXISTS cliente (
+                IF OBJECT_ID(N'dbo.cliente', N'U') IS NULL
+                BEGIN
+                    CREATE TABLE cliente (
                         id INT IDENTITY(1,1) PRIMARY KEY,
                         nome VARCHAR(100) NOT NULL,
                         email VARCHAR(100) UNIQUE NOT NULL,
@@ -32,6 +34,7 @@ public class sqlServerCreateTable implements ICreateTable {
                         endereco_num INT,
                         endereco_complemento VARCHAR(50)
                     );
+                END;
                 """;
         try (Connection c = connector.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {

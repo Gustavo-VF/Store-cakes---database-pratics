@@ -13,7 +13,6 @@ public class Bolo {
     private int pesoGrama = 0;
     private Sabor saborRecheio = new Sabor();
     private Sabor saborMassa = new Sabor();
-    private List<IngredienteBolo> ingredienteBolos = new ArrayList<>();
 
     // Product Information
     private double preco = 0.0;
@@ -21,13 +20,12 @@ public class Bolo {
     private boolean prontaEntrega = false;
 
 
-    public Bolo(long id, String nome, int pesoGrama, Sabor saborRecheio, Sabor saborMassa, List<IngredienteBolo> ingredienteBolos, double preco, boolean encomendavel, boolean prontaEntrega) {
+    public Bolo(long id, String nome, int pesoGrama, Sabor saborRecheio, Sabor saborMassa, double preco, boolean encomendavel, boolean prontaEntrega) {
         this.id = id;
         this.nome = nome;
         this.pesoGrama = pesoGrama;
         this.saborRecheio = saborRecheio;
         this.saborMassa = saborMassa;
-        this.ingredienteBolos = ingredienteBolos;
         this.preco = preco;
         this.encomendavel = encomendavel;
         this.prontaEntrega = prontaEntrega;
@@ -76,14 +74,6 @@ public class Bolo {
         this.saborMassa = saborMassa;
     }
 
-    public List<IngredienteBolo> getIngredienteBolos() {
-        return ingredienteBolos;
-    }
-
-    public void setIngredienteBolos(List<IngredienteBolo> ingredienteBolos) {
-        this.ingredienteBolos = ingredienteBolos;
-    }
-
     public double getPreco() {
         return preco;
     }
@@ -108,19 +98,6 @@ public class Bolo {
         this.prontaEntrega = prontaEntrega;
     }
 
-    public double getPrecoTotal() {
-        double total = getPreco();
-        if (ingredienteBolos != null) {
-            total += ingredienteBolos.stream()
-                    .mapToDouble(i -> i.getIngrediente().getPreco() * i.getQuantidade())
-                    .sum();
-        }
-
-        if (saborMassa != null) total += saborMassa.getPrecoTotal();
-        if (saborRecheio != null) total += saborRecheio.getPrecoTotal();
-
-        return total;
-    }
 
     @Override
     public String toString() {
@@ -130,7 +107,6 @@ public class Bolo {
                 ", pesoGrama=" + pesoGrama +
                 ", saborRecheio=" + saborRecheio +
                 ", saborMassa=" + saborMassa +
-                ", ingredientes=" + ingredienteBolos +
                 ", preco=" + preco +
                 ", encomendavel=" + encomendavel +
                 ", prontaEntrega=" + prontaEntrega +
@@ -141,11 +117,11 @@ public class Bolo {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Bolo bolo = (Bolo) o;
-        return id == bolo.id && pesoGrama == bolo.pesoGrama && Double.compare(preco, bolo.preco) == 0 && encomendavel == bolo.encomendavel && prontaEntrega == bolo.prontaEntrega && Objects.equals(nome, bolo.nome) && Objects.equals(saborRecheio, bolo.saborRecheio) && Objects.equals(saborMassa, bolo.saborMassa) && Objects.equals(ingredienteBolos, bolo.ingredienteBolos);
+        return id == bolo.id && pesoGrama == bolo.pesoGrama && Double.compare(preco, bolo.preco) == 0 && encomendavel == bolo.encomendavel && prontaEntrega == bolo.prontaEntrega && Objects.equals(nome, bolo.nome) && Objects.equals(saborRecheio, bolo.saborRecheio) && Objects.equals(saborMassa, bolo.saborMassa);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, pesoGrama, saborRecheio, saborMassa, ingredienteBolos, preco, encomendavel, prontaEntrega);
+        return Objects.hash(id, nome, pesoGrama, saborRecheio, saborMassa, preco, encomendavel, prontaEntrega);
     }
 }
