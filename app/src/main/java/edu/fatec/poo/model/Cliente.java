@@ -2,7 +2,7 @@ package edu.fatec.poo.model;
 
 import java.util.UUID;
 
-public class Cliente implements IEntity {
+public class Cliente {
     private UUID Id;
     private String nome;
     private String email;

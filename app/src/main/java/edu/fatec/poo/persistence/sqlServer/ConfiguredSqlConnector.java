@@ -1,21 +1,26 @@
-package edu.fatec.poo.persistence.connection;
+package edu.fatec.poo.persistence.sqlServer;
 
-import edu.fatec.poo.persistence.sqlServer.sqlServerConnector;
-import edu.fatec.poo.persistence.sqlServer.sqlServerCreateDB;
-import edu.fatec.poo.persistence.sqlServer.sqlServerCreateTable;
+import edu.fatec.poo.persistence.connection.ADaoConnector;
+import edu.fatec.poo.persistence.connection.ICreateDB;
+import edu.fatec.poo.persistence.connection.ICreateTable;
+import edu.fatec.poo.persistence.sqlServer.create.sqlServerConnector;
+import edu.fatec.poo.persistence.sqlServer.create.sqlServerCreateDB;
+import edu.fatec.poo.persistence.sqlServer.create.sqlServerCreateTable;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
-public class CurrentConnection {
+public class ConfiguredSqlConnector {
 
     private ADaoConnector conector;
 
-    public CurrentConnection() {
+    private final String dbName = "store_cakes";
+    private final String porta = "3306";
+
+    public ConfiguredSqlConnector() {
         conector = new sqlServerConnector(
                 "localhost",
-                "3306",
-                "Doacao",
+                porta,
+                dbName,
                 "root",
                 "12345678"
         );
@@ -26,20 +31,20 @@ public class CurrentConnection {
         try {
             connector = new sqlServerConnector(
                     "localhost",
-                    "3306",
+                    porta,
                     "sys",
                     "root",
                     "12345678"
             );
             try (Connection connection = connector.getConnection()) {
-                ICreateDB createDB = new sqlServerCreateDB(connector);
+                ICreateDB createDB = new sqlServerCreateDB(connector, dbName);
                 createDB.createDatabase();
             }
 
             connector = new sqlServerConnector(
                     "localhost",
-                    "3306",
-                    "Doacao",
+                    porta,
+                    dbName,
                     "root",
                     "12345678"
             );

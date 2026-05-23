@@ -1,4 +1,4 @@
-package edu.fatec.poo.persistence.sqlServer;
+package edu.fatec.poo.persistence.sqlServer.create;
 
 import edu.fatec.poo.persistence.connection.ADaoConnector;
 import edu.fatec.poo.persistence.connection.ICreateTable;
