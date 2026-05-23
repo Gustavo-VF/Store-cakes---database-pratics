@@ -1,4 +1,4 @@
-package edu.fatec.poo.persistence;
+package edu.fatec.poo.persistence.connection;
 
 import java.sql.SQLException;
 
@@ -19,5 +19,5 @@ public interface ICreateDB {
      *
      * @throws SQLException Se ocorrer um erro durante a execução dos comandos SQL.
      */
-    void createDatabase() throws SQLException;
+    void createDatabase() throws SQLException, ClassNotFoundException;
 }
