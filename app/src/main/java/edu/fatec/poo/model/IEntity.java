@@ -1,7 +1,9 @@
 package edu.fatec.poo.model;
 
-public interface IEntity {
-    public long getId();
+import java.util.UUID;
 
-    public void setId(long id);
+public interface IEntity {
+    UUID getId();
+
+    void setId(UUID id);
 }

@@ -1,22 +1,22 @@
 package edu.fatec.poo.model;
 
+import java.util.UUID;
+
 public class Cliente implements IEntity {
-    private long Id;
+    private UUID Id;
     private String nome;
     private String email;
-    private int telefone;
+    private String senha;
     private String enderecoLogradouro;
     private String enderecoCep;
     private int enderecoNum;
     private String complemento;
 
-    @Override
-    public long getId() {
+    public UUID getId() {
         return Id;
     }
 
-    @Override
-    public void setId(long id) {
+    public void setId(UUID id) {
         Id = id;
     }
 
@@ -36,12 +36,12 @@ public class Cliente implements IEntity {
         this.email = email;
     }
 
-    public int getTelefone() {
-        return telefone;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setTelefone(int telefone) {
-        this.telefone = telefone;
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public String getEnderecoLogradouro() {
@@ -74,19 +74,5 @@ public class Cliente implements IEntity {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
-    }
-
-    @Override
-    public String toString() {
-        return "Cliente{" +
-                "Id=" + Id +
-                ", nome='" + nome + '\'' +
-                ", email='" + email + '\'' +
-                ", telefone=" + telefone +
-                ", enderecoLogradouro='" + enderecoLogradouro + '\'' +
-                ", enderecoCep='" + enderecoCep + '\'' +
-                ", enderecoNum=" + enderecoNum +
-                ", complemento='" + complemento + '\'' +
-                '}';
     }
 }

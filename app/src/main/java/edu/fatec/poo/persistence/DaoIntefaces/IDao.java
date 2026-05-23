@@ -1,7 +1,8 @@
-package edu.fatec.poo.persistence.entityDao;
+package edu.fatec.poo.persistence.DaoIntefaces;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Interface genérica para o padrão de projeto Data Access Object (DAO).
@@ -38,7 +39,7 @@ public interface IDao<T> {
      * @return O objeto correspondente ao ID informado, ou {@code null} se não encontrado.
      * @throws SQLException Se ocorrer um erro durante a execução da busca.
      */
-    public T searchById(Long id) throws SQLException;
+    public T searchById(UUID id) throws SQLException;
 
     /**
      * Atualiza os dados de um registro existente no banco de dados.

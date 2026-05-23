@@ -1,4 +1,4 @@
-package edu.fatec.poo.persistence.entityDao;
+package edu.fatec.poo.persistence.DaoIntefaces;
 
 import edu.fatec.poo.model.IEntity;
 import edu.fatec.poo.persistence.ADaoConnection;
@@ -6,6 +6,7 @@ import edu.fatec.poo.persistence.ADaoConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Classe abstrata que fornece uma implementação base para operações de acesso a dados (DAO)
@@ -80,10 +81,10 @@ public abstract class GenericDao<T extends IEntity> implements IDao<T> {
      * @throws SQLException Se ocorrer um erro de banco de dados.
      */
     @Override
-    public T searchById(Long id) throws SQLException {
+    public T searchById(UUID id) throws SQLException {
         String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setLong(1, id);
+            ps.setString(1, id.toString());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return map(rs);
@@ -122,7 +123,7 @@ public abstract class GenericDao<T extends IEntity> implements IDao<T> {
     public void delete(T object) throws SQLException {
         String sql = "DELETE FROM " + tableName + " WHERE id = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setLong(1, object.getId());
+            ps.setString(1, object.getId().toString());
             ps.execute();
         }
     }
