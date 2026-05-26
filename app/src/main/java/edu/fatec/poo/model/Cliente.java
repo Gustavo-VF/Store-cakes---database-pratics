@@ -10,7 +10,7 @@ public class Cliente {
     private String enderecoLogradouro;
     private String enderecoCep;
     private int enderecoNum;
-    private String complemento;
+    private String enderecoComplemento;
 
     public UUID getId() {
         return Id;
@@ -68,11 +68,11 @@ public class Cliente {
         this.enderecoNum = enderecoNum;
     }
 
-    public String getComplemento() {
-        return complemento;
+    public String getEnderecoComplemento() {
+        return enderecoComplemento;
     }
 
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
+    public void setEnderecoComplemento(String enderecoComplemento) {
+        this.enderecoComplemento = enderecoComplemento;
     }
 }

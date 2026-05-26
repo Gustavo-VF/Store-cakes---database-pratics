@@ -21,6 +21,7 @@ public class sqlServerCreateTable implements ICreateTable {
         createTableTipoProduto();
         createTableProduto();
         createTablePedido();
+        createTableItemPedido();
         //TODO
     }
 
@@ -81,7 +82,7 @@ public class sqlServerCreateTable implements ICreateTable {
                         id VARCHAR(36) PRIMARY KEY,
                         nome VARCHAR(100) NOT NULL,
                         preco NUMERIC(8,2) NOT NULL,
-                        tipo_produto VARCHAR(36),
+                        tipo_produto VARCHAR(36) NOT NULL,
                         FOREIGN KEY (tipo_produto) REFERENCES tipo_produto(id)
                     );
                 END;
@@ -117,6 +118,33 @@ public class sqlServerCreateTable implements ICreateTable {
             System.out.println("[SQL Server] Tabela Pedido criada com sucesso ou já existente.");
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("[SQL Server] Erro ao criar tabela Pedido no: " + e.getMessage());
+            throw e;
+        }
+    }
+
+
+    @Override
+    public void createTableItemPedido() throws SQLException, ClassNotFoundException {
+        String sql = """
+                IF OBJECT_ID(N'dbo.item_pedido', N'U') IS NULL
+                BEGIN
+                    CREATE TABLE item_pedido (
+                        id VARCHAR(36) PRIMARY KEY,
+                        quantidade INT NOT NULL,
+                        preco_unitario NUMERIC(8,2) NOT NULL,
+                        pedido VARCHAR(36) NOT NULL,
+                        produto VARCHAR(36) NOT NULL,
+                        FOREIGN KEY (pedido) REFERENCES pedido(id),
+                        FOREIGN KEY (produto) REFERENCES produto(id)
+                    );
+                END;
+                """;
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.execute();
+            System.out.println("[SQL Server] Tabela ItemPedido criada com sucesso ou já existente.");
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("[SQL Server] Erro ao criar tabela ItemPedido no: " + e.getMessage());
             throw e;
         }
     }

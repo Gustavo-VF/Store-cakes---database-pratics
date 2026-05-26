@@ -5,7 +5,7 @@ import java.util.UUID;
 public class ItemPedido {
     private UUID id;
     private int quantidade;
-    private double precoUnintario;
+    private double precoUnitario;
     private Pedido pedido;
     private Produto produto;
 
@@ -25,12 +25,12 @@ public class ItemPedido {
         this.quantidade = quantidade;
     }
 
-    public double getPrecoUnintario() {
-        return precoUnintario;
+    public double getPrecoUnitario() {
+        return precoUnitario;
     }
 
-    public void setPrecoUnintario(double precoUnintario) {
-        this.precoUnintario = precoUnintario;
+    public void setPrecoUnitario(double precoUnintario) {
+        this.precoUnitario = precoUnintario;
     }
 
     public Pedido getPedido() {

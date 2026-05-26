@@ -80,7 +80,7 @@ public class PedidoSqlImpl implements PedidoDAO {
                     cliente.setEnderecoLogradouro(rs.getString("cliente_logradouro"));
                     cliente.setEnderecoCep(rs.getString("cliente_cep"));
                     cliente.setEnderecoNum(rs.getInt("cliente_numero"));
-                    cliente.setComplemento(rs.getString("cliente_complemento"));
+                    cliente.setEnderecoComplemento(rs.getString("cliente_complemento"));
 
                     pedido.setCliente(cliente);
                     return Optional.of(pedido);
@@ -121,7 +121,7 @@ public class PedidoSqlImpl implements PedidoDAO {
                 cliente.setEnderecoLogradouro(rs.getString("cliente_logradouro"));
                 cliente.setEnderecoCep(rs.getString("cliente_cep"));
                 cliente.setEnderecoNum(rs.getInt("cliente_numero"));
-                cliente.setComplemento(rs.getString("cliente_complemento"));
+                cliente.setEnderecoComplemento(rs.getString("cliente_complemento"));
 
                 pedido.setCliente(cliente);
                 pedidos.add(pedido);
