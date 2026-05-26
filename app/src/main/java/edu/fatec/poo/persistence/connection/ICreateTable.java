@@ -18,4 +18,5 @@ public interface ICreateTable {
 
     void createTableCarrinho() throws SQLException, ClassNotFoundException;
 
+    void createTableItemCarrinho() throws SQLException, ClassNotFoundException;
 }
