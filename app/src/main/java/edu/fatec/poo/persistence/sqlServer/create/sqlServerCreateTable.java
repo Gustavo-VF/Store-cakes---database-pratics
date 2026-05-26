@@ -22,6 +22,7 @@ public class sqlServerCreateTable implements ICreateTable {
         createTableProduto();
         createTablePedido();
         createTableItemPedido();
+        createTableCarrinho();
         //TODO
     }
 
@@ -145,6 +146,28 @@ public class sqlServerCreateTable implements ICreateTable {
             System.out.println("[SQL Server] Tabela ItemPedido criada com sucesso ou já existente.");
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("[SQL Server] Erro ao criar tabela ItemPedido no: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public void createTableCarrinho() throws SQLException, ClassNotFoundException {
+        String sql = """
+                IF OBJECT_ID(N'dbo.carrinho', N'U') IS NULL
+                BEGIN
+                    CREATE TABLE carrinho (
+                        id VARCHAR(36) PRIMARY KEY,
+                        cliente VARCHAR(36) NOT NULL UNIQUE,
+                        FOREIGN KEY (cliente) REFERENCES cliente(id)
+                    );
+                END;
+                """;
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.execute();
+            System.out.println("[SQL Server] Tabela Carrinho criada com sucesso ou já existente.");
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("[SQL Server] Erro ao criar tabela Carrinho no: " + e.getMessage());
             throw e;
         }
     }

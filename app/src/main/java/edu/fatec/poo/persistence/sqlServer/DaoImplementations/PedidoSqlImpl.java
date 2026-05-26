@@ -52,7 +52,7 @@ public class PedidoSqlImpl implements PedidoDAO {
         String sql = "SELECT " +
                 "p.id, p.cliente, p.preco_total, p.data, p.status, " +
                 "c.id AS cliente_id, c.nome AS cliente_nome, c.email AS cliente_email, c.senha AS cliente_senha, " +
-                "c.telefone AS cliente_telefone, c.endereco_logradouro AS cliente_logradouro, " +
+                "c.endereco_logradouro AS cliente_logradouro, " +
                 "c.endereco_cep AS cliente_cep, c.endereco_num AS cliente_numero, " +
                 "c.endereco_complemento AS cliente_complemento " +
                 "FROM " + tableName + " p " +
@@ -96,7 +96,7 @@ public class PedidoSqlImpl implements PedidoDAO {
         String sql = "SELECT " +
                 "p.id, p.cliente, p.preco_total, p.data, p.status, " +
                 "c.id AS cliente_id, c.nome AS cliente_nome, c.email AS cliente_email, " +
-                "c.telefone AS cliente_telefone, c.endereco_logradouro AS cliente_logradouro, " +
+                "c.endereco_logradouro AS cliente_logradouro, " +
                 "c.endereco_cep AS cliente_cep, c.endereco_num AS cliente_numero, " +
                 "c.endereco_complemento AS cliente_complemento " +
                 "FROM " + tableName + " p " +
