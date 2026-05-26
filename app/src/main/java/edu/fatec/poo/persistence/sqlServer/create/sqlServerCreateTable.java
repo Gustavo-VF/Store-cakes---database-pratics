@@ -3,7 +3,9 @@ package edu.fatec.poo.persistence.sqlServer.create;
 import edu.fatec.poo.persistence.connection.ADaoConnector;
 import edu.fatec.poo.persistence.connection.ICreateTable;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class sqlServerCreateTable implements ICreateTable {
 
@@ -18,6 +20,7 @@ public class sqlServerCreateTable implements ICreateTable {
         createTableCliente();
         createTableTipoProduto();
         createTableProduto();
+        createTablePedido();
         //TODO
     }
 
@@ -30,7 +33,7 @@ public class sqlServerCreateTable implements ICreateTable {
                         id VARCHAR(36) PRIMARY KEY,
                         nome VARCHAR(100) NOT NULL,
                         email VARCHAR(100) UNIQUE NOT NULL,
-                        telefone VARCHAR(20),
+                        senha VARCHAR(100) NOT NULL,
                         endereco_logradouro VARCHAR(150),
                         endereco_cep VARCHAR(9),
                         endereco_num INT,
@@ -69,13 +72,6 @@ public class sqlServerCreateTable implements ICreateTable {
         }
     }
 
-    /*
-Produto{
-private UUID id;
-private String nome;
-private double preco;
-private TipoProduto tipoProduto;}
- */
     @Override
     public void createTableProduto() throws SQLException, ClassNotFoundException {
         String sql = """
@@ -96,6 +92,31 @@ private TipoProduto tipoProduto;}
             System.out.println("[SQL Server] Tabela Produto criada com sucesso ou já existente.");
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("[SQL Server] Erro ao criar tabela Produto no: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public void createTablePedido() throws SQLException, ClassNotFoundException {
+        String sql = """
+                IF OBJECT_ID(N'dbo.pedido', N'U') IS NULL
+                BEGIN
+                    CREATE TABLE pedido (
+                        id VARCHAR(36) PRIMARY KEY,
+                        cliente VARCHAR(36) NOT NULL,
+                        preco_total NUMERIC(8,2) NOT NULL,
+                        data DATE NOT NULL,
+                        status VARCHAR(100) NOT NULL,
+                        FOREIGN KEY (cliente) REFERENCES cliente(id)
+                    );
+                END;
+                """;
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.execute();
+            System.out.println("[SQL Server] Tabela Pedido criada com sucesso ou já existente.");
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("[SQL Server] Erro ao criar tabela Pedido no: " + e.getMessage());
             throw e;
         }
     }
