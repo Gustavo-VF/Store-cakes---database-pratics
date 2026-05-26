@@ -9,4 +9,6 @@ public interface ICreateTable {
     void createTableCliente() throws SQLException, ClassNotFoundException;
 
     void createTableTipoProduto() throws SQLException, ClassNotFoundException;
+
+    void createTableProduto() throws SQLException, ClassNotFoundException;
 }

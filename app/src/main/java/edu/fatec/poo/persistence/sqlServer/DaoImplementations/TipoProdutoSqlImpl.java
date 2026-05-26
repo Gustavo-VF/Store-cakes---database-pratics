@@ -66,11 +66,11 @@ public class TipoProdutoSqlImpl implements TipoProdutoDAO {
 
     @Override
     public Optional<List<TipoProduto>> searchAll() throws SQLException, ClassNotFoundException {
-        String slq = "SELECT id, descricao FROM " + tableName + ";";
+        String sql = "SELECT id, descricao FROM " + tableName + ";";
         List<TipoProduto> produtos = new ArrayList<>();
 
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(slq);
+             PreparedStatement ps = c.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
