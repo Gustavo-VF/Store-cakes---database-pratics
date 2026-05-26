@@ -1,9 +1,9 @@
-package edu.fatec.poo.persistence.sqlServer.DaoImplementations;
+package edu.fatec.poo.persistence.sqlServer.daoImplementations;
 
 import edu.fatec.poo.model.Produto;
 import edu.fatec.poo.model.TipoProduto;
-import edu.fatec.poo.persistence.DaoIntefaces.ProdutoDAO;
 import edu.fatec.poo.persistence.connection.ADaoConnector;
+import edu.fatec.poo.persistence.daoIntefaces.ProdutoDAO;
 import edu.fatec.poo.persistence.sqlServer.ConfiguredSqlConnector;
 
 import java.sql.Connection;

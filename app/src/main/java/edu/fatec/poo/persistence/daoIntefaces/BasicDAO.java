@@ -1,6 +1,4 @@
-package edu.fatec.poo.persistence.DaoIntefaces;
-
-import edu.fatec.poo.model.TipoProduto;
+package edu.fatec.poo.persistence.daoIntefaces;
 
 import java.sql.SQLException;
 import java.util.List;

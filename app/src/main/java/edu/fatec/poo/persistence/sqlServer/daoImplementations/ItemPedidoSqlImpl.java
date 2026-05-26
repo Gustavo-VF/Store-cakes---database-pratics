@@ -1,8 +1,8 @@
-package edu.fatec.poo.persistence.sqlServer.DaoImplementations;
+package edu.fatec.poo.persistence.sqlServer.daoImplementations;
 
 import edu.fatec.poo.model.*;
-import edu.fatec.poo.persistence.DaoIntefaces.ItemPedidoDAO;
 import edu.fatec.poo.persistence.connection.ADaoConnector;
+import edu.fatec.poo.persistence.daoIntefaces.ItemPedidoDAO;
 import edu.fatec.poo.persistence.sqlServer.ConfiguredSqlConnector;
 
 import java.sql.Connection;

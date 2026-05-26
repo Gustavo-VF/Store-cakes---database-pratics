@@ -1,4 +1,4 @@
-package edu.fatec.poo.persistence.DaoIntefaces;
+package edu.fatec.poo.persistence.daoIntefaces;
 
 import edu.fatec.poo.model.ItemPedido;
 

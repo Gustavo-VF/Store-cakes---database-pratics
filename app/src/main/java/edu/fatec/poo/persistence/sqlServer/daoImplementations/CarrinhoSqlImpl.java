@@ -1,9 +1,9 @@
-package edu.fatec.poo.persistence.sqlServer.DaoImplementations;
+package edu.fatec.poo.persistence.sqlServer.daoImplementations;
 
 import edu.fatec.poo.model.Carrinho;
 import edu.fatec.poo.model.Cliente;
-import edu.fatec.poo.persistence.DaoIntefaces.CarrinhoDAO;
 import edu.fatec.poo.persistence.connection.ADaoConnector;
+import edu.fatec.poo.persistence.daoIntefaces.CarrinhoDAO;
 import edu.fatec.poo.persistence.sqlServer.ConfiguredSqlConnector;
 
 import java.sql.Connection;
