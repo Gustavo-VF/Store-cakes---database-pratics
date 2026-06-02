@@ -7,11 +7,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class sqlServerCreateTable implements ICreateTable {
+public class SqlServerCreateTable implements ICreateTable {
 
     private final ADaoConnector connector;
 
-    public sqlServerCreateTable(ADaoConnector connector) {
+    public SqlServerCreateTable(ADaoConnector connector) {
         this.connector = connector;
     }
 
@@ -24,7 +24,17 @@ public class sqlServerCreateTable implements ICreateTable {
         createTableItemPedido();
         createTableCarrinho();
         createTableItemCarrinho();
-        //TODO
+    }
+    
+    private void executeTableCreation(String tableName, String sql) throws SQLException, ClassNotFoundException {
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.execute();
+            System.out.println("[SQL Server] Tabela " + tableName + " criada com sucesso ou já existente.");
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("[SQL Server] Erro ao criar tabela " + tableName + ": " + e.getMessage());
+            throw e;
+        }
     }
 
     @Override
@@ -39,19 +49,12 @@ public class sqlServerCreateTable implements ICreateTable {
                         senha VARCHAR(100) NOT NULL,
                         endereco_logradouro VARCHAR(150),
                         endereco_cep VARCHAR(9),
-                        endereco_num INT,
+                        endereco_num INT CHECK ( endereco_num > 0 ),
                         endereco_complemento VARCHAR(50)
                     );
                 END;
                 """;
-        try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.execute();
-            System.out.println("[SQL Server] Tabela Cliente criada com sucesso ou já existente.");
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("[SQL Server] Erro ao criar tabela Cliente no: " + e.getMessage());
-            throw e;
-        }
+        executeTableCreation("Cliente", sql);
     }
 
     @Override
@@ -65,14 +68,7 @@ public class sqlServerCreateTable implements ICreateTable {
                     );
                 END;
                 """;
-        try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.execute();
-            System.out.println("[SQL Server] Tabela Tipo Produto criada com sucesso ou já existente.");
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("[SQL Server] Erro ao criar tabela Tipo Produto no: " + e.getMessage());
-            throw e;
-        }
+        executeTableCreation("Tipo Produto", sql);
     }
 
     @Override
@@ -83,20 +79,13 @@ public class sqlServerCreateTable implements ICreateTable {
                     CREATE TABLE produto (
                         id VARCHAR(36) PRIMARY KEY,
                         nome VARCHAR(100) NOT NULL,
-                        preco NUMERIC(8,2) NOT NULL,
+                        preco NUMERIC(8,2) NOT NULL CHECK ( preco > 0.0 ),
                         tipo_produto VARCHAR(36) NOT NULL,
                         FOREIGN KEY (tipo_produto) REFERENCES tipo_produto(id)
                     );
                 END;
                 """;
-        try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.execute();
-            System.out.println("[SQL Server] Tabela Produto criada com sucesso ou já existente.");
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("[SQL Server] Erro ao criar tabela Produto no: " + e.getMessage());
-            throw e;
-        }
+        executeTableCreation("Produto", sql);
     }
 
     @Override
@@ -107,23 +96,14 @@ public class sqlServerCreateTable implements ICreateTable {
                     CREATE TABLE pedido (
                         id VARCHAR(36) PRIMARY KEY,
                         cliente VARCHAR(36) NOT NULL,
-                        --preco_total NUMERIC(8,2) NOT NULL,
-                        data DATE NOT NULL,
+                        data DATE NOT NULL CHECK ( data <= GETDATE() ),
                         status VARCHAR(100) NOT NULL,
                         FOREIGN KEY (cliente) REFERENCES cliente(id)
                     );
                 END;
                 """;
-        try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.execute();
-            System.out.println("[SQL Server] Tabela Pedido criada com sucesso ou já existente.");
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("[SQL Server] Erro ao criar tabela Pedido no: " + e.getMessage());
-            throw e;
-        }
+        executeTableCreation("Pedido", sql);
     }
-
 
     @Override
     public void createTableItemPedido() throws SQLException, ClassNotFoundException {
@@ -132,8 +112,8 @@ public class sqlServerCreateTable implements ICreateTable {
                 BEGIN
                     CREATE TABLE item_pedido (
                         id VARCHAR(36) PRIMARY KEY,
-                        quantidade INT NOT NULL,
-                        preco_unitario NUMERIC(8,2) NOT NULL,
+                        quantidade INT NOT NULL CHECK ( quantidade > 0 ),
+                        preco_unitario NUMERIC(8,2) NOT NULL CHECK ( preco_unitario > 0 ),
                         pedido VARCHAR(36) NOT NULL,
                         produto VARCHAR(36) NOT NULL,
                         FOREIGN KEY (pedido) REFERENCES pedido(id),
@@ -141,14 +121,7 @@ public class sqlServerCreateTable implements ICreateTable {
                     );
                 END;
                 """;
-        try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.execute();
-            System.out.println("[SQL Server] Tabela ItemPedido criada com sucesso ou já existente.");
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("[SQL Server] Erro ao criar tabela ItemPedido no: " + e.getMessage());
-            throw e;
-        }
+        executeTableCreation("Item Pedido", sql);
     }
 
     @Override
@@ -163,14 +136,7 @@ public class sqlServerCreateTable implements ICreateTable {
                     );
                 END;
                 """;
-        try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.execute();
-            System.out.println("[SQL Server] Tabela Carrinho criada com sucesso ou já existente.");
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("[SQL Server] Erro ao criar tabela Carrinho no: " + e.getMessage());
-            throw e;
-        }
+        executeTableCreation("Carrinho", sql);
     }
 
     @Override
@@ -180,7 +146,7 @@ public class sqlServerCreateTable implements ICreateTable {
                 BEGIN
                     CREATE TABLE item_carrinho (
                         id VARCHAR(36) PRIMARY KEY,
-                        quantidade INT NOT NULL, 
+                        quantidade INT NOT NULL CHECK ( quantidade > 0 ), 
                         carrinho VARCHAR(36) NOT NULL,
                         produto VARCHAR(36) NOT NULL,
                         FOREIGN KEY (carrinho) REFERENCES carrinho(id) ON DELETE CASCADE,
@@ -188,13 +154,6 @@ public class sqlServerCreateTable implements ICreateTable {
                     );
                 END;
                 """;
-        try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.execute();
-            System.out.println("[SQL Server] Tabela Item-Carrinho criada com sucesso ou já existente.");
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("[SQL Server] Erro ao criar tabela Item-Carrinho no: " + e.getMessage());
-            throw e;
-        }
+        executeTableCreation("Item Carrinho", sql);
     }
 }

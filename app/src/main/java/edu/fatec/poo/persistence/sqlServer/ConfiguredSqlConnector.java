@@ -3,21 +3,20 @@ package edu.fatec.poo.persistence.sqlServer;
 import edu.fatec.poo.persistence.connection.ADaoConnector;
 import edu.fatec.poo.persistence.connection.ICreateDB;
 import edu.fatec.poo.persistence.connection.ICreateTable;
-import edu.fatec.poo.persistence.sqlServer.create.sqlServerConnector;
-import edu.fatec.poo.persistence.sqlServer.create.sqlServerCreateDB;
+import edu.fatec.poo.persistence.sqlServer.create.SqlServerConnector;
+import edu.fatec.poo.persistence.sqlServer.create.SqlServerCreateDB;
 import edu.fatec.poo.persistence.sqlServer.create.sqlServerCreateTable;
 
 import java.sql.Connection;
 
 public class ConfiguredSqlConnector {
 
-    private ADaoConnector conector;
-
     private final String dbName = "store_cakes";
     private final String porta = "3306";
+    private ADaoConnector conector;
 
     public ConfiguredSqlConnector() {
-        conector = new sqlServerConnector(
+        conector = new SqlServerConnector(
                 "localhost",
                 porta,
                 dbName,
@@ -29,7 +28,7 @@ public class ConfiguredSqlConnector {
     public void buildMariaDb() {
         ADaoConnector connector;
         try {
-            connector = new sqlServerConnector(
+            connector = new SqlServerConnector(
                     "localhost",
                     porta,
                     "sys",
@@ -37,11 +36,11 @@ public class ConfiguredSqlConnector {
                     "12345678"
             );
             try (Connection connection = connector.getConnection()) {
-                ICreateDB createDB = new sqlServerCreateDB(connector, dbName);
+                ICreateDB createDB = new SqlServerCreateDB(connector, dbName);
                 createDB.createDatabase();
             }
 
-            connector = new sqlServerConnector(
+            connector = new SqlServerConnector(
                     "localhost",
                     porta,
                     dbName,

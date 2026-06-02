@@ -7,12 +7,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class sqlServerCreateDB implements ICreateDB {
+public class SqlServerCreateDB implements ICreateDB {
 
     private final String dbName;
     private final ADaoConnector connector;
 
-    public sqlServerCreateDB(ADaoConnector connector, String dbName) {
+    public SqlServerCreateDB(ADaoConnector connector, String dbName) {
         this.connector = connector;
         this.dbName = dbName;
     }

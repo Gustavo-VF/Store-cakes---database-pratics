@@ -6,9 +6,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class sqlServerConnector extends ADaoConnector {
+public class SqlServerConnector extends ADaoConnector {
 
-    public sqlServerConnector(String hostname, String porta, String dbName, String user, String senha) {
+    public SqlServerConnector(String hostname, String porta, String dbName, String user, String senha) {
         super(hostname, porta, dbName, user, senha);
     }
 
