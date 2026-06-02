@@ -27,37 +27,156 @@ public class ItemCarrinhoSqlImpl implements ItemCarrinhoDAO {
         this.connector = new ConfiguredSqlConnector().getConector();
     }
 
-    private String fullQuerryAll() {
-        return fullQuerry().append(";").toString();
+    private String fullQueryAll() {
+        return fullQuery().append(";").toString();
     }
 
-    private String fullQuerryById() {
-        return fullQuerry().append(" WHERE itc.id = ?;").toString();
+    private String fullQueryById() {
+        return fullQuery().append(" WHERE itc.id = ?;").toString();
     }
 
-    private StringBuilder fullQuerry() {
+    private StringBuilder fullQuery() {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT itc.id AS id, itc.quantidade AS quantidade, ");
-        sql.append("carr.id AS carrinho_id, ");
-        sql.append("prod.id AS produto_id, prod.nome AS produto_nome, prod.preco AS produto_preco, ");
-        sql.append("tipo.id AS tipo_id, tipo.descricao AS tipo_descricao, ped.id AS pedido_id, ");
-        sql.append("cli.id AS cliente_id, cli.nome AS cliente_nome, cli.email AS cliente_email, cli.senha AS cliente_senha, ");
-        sql.append("cli.endereco_logradouro AS cliente_logradouro, cli.endereco_cep AS cliente_cep, ");
-        sql.append("cli.endereco_num AS cliente_numero, cli.endereco_complemento AS cliente_complemento ");
-        sql.append("FROM ").append(tableName).append(" itc ");
-        sql.append("INNER JOIN ").append(tableNameCarrinho).append(" carr ON itc.carrinho = carr.id ");
-        sql.append("INNER JOIN ").append(tableNameCliente).append(" cli ON carr.cliente = cli.id ");
-        sql.append("INNER JOIN ").append(tableNameProduto).append(" prod ON itc.produto = prod.id ");
-        sql.append("INNER JOIN ").append(tableNameTipoProduto).append(" tipo ON prod.tipo_produto = tipo.id ");
+
+        // 1. Projeção (SELECT e suas colunas)
+        startSelect(sql);
+        appendItemCarrinhoColumns(sql).append(", ");
+        appendCarrinhoColumns(sql).append(", ");
+        appendProdutoColumns(sql).append(", ");
+        appendClienteColumns(sql); // O último campo não leva vírgula
+
+        // 2. Origem (FROM)
+        startFrom(sql);
+
+        // 3. Relacionamentos (JOINS)
+        joinCarrinho(sql);
+        joinCliente(sql);
+        joinProduto(sql);
+        joinTipoProduto(sql);
+
         return sql;
     }
 
+    private String queryByCarrinhoId() {
+        StringBuilder sql = new StringBuilder();
+        startSelect(sql);
+        appendItemCarrinhoColumns(sql).append(", ");
+        appendProdutoColumns(sql);
+
+        startFrom(sql);
+        joinProduto(sql);
+        joinTipoProduto(sql);
+
+        return sql.append(" WHERE itc.carrinho = ?;").toString();
+    }
+
+    private String queryByProdutoId() {
+        StringBuilder sql = new StringBuilder();
+
+        startSelect(sql);
+        appendItemCarrinhoColumns(sql).append(", ");
+        appendCarrinhoColumns(sql).append(", ");
+        appendClienteColumns(sql);
+
+        startFrom(sql);
+
+        joinCarrinho(sql);
+        joinCliente(sql);
+
+        return sql.append(" WHERE itc.produto = ?;").toString();
+    }
+
+    private StringBuilder startSelect(StringBuilder sql) {
+        return sql.append("SELECT ");
+    }
+
+    private StringBuilder startFrom(StringBuilder sql) {
+        return sql.append(" FROM ").append(tableName).append(" itc ");
+    }
+
+    private StringBuilder appendItemCarrinhoColumns(StringBuilder sql) {
+        return sql.append("itc.id AS id, itc.quantidade AS quantidade");
+    }
+
+    private StringBuilder appendCarrinhoColumns(StringBuilder sql) {
+        return sql.append("carr.id AS carrinho_id");
+    }
+
+    private StringBuilder appendProdutoColumns(StringBuilder sql) {
+        sql.append("prod.id AS produto_id, prod.nome AS produto_nome, prod.preco AS produto_preco, ");
+        sql.append("tipo.id AS tipo_id, tipo.descricao AS tipo_descricao");
+        return sql;
+    }
+
+    private StringBuilder appendClienteColumns(StringBuilder sql) {
+        sql.append("cli.id AS cliente_id, cli.nome AS cliente_nome, cli.email AS cliente_email, ");
+        sql.append("cli.senha AS cliente_senha, cli.endereco_logradouro AS cliente_logradouro, ");
+        sql.append("cli.endereco_cep AS cliente_cep, cli.endereco_num AS cliente_numero, ");
+        sql.append("cli.endereco_complemento AS cliente_complemento");
+        return sql;
+    }
+
+    private StringBuilder joinCarrinho(StringBuilder sql) {
+        return sql.append("INNER JOIN ").append(tableNameCarrinho).append(" carr ON itc.carrinho = carr.id ");
+    }
+
+    private StringBuilder joinCliente(StringBuilder sql) {
+        return sql.append("INNER JOIN ").append(tableNameCliente).append(" cli ON carr.cliente = cli.id ");
+    }
+
+    private StringBuilder joinProduto(StringBuilder sql) {
+        return sql.append("INNER JOIN ").append(tableNameProduto).append(" prod ON itc.produto = prod.id ");
+    }
+
+    private StringBuilder joinTipoProduto(StringBuilder sql) {
+        return sql.append("INNER JOIN ").append(tableNameTipoProduto).append(" tipo ON prod.tipo_produto = tipo.id ");
+    }
+
     private ItemCarrinho rsToItemCarrinhoFull(ResultSet rs) throws SQLException {
-        // montar Carrinho
+        ItemCarrinho itemCarrinho = mapItemCarrinho(rs);
+
+        itemCarrinho.setCarrinho(mapCarrinho(rs));
+        itemCarrinho.setProduto(mapProduto(rs));
+
+        return itemCarrinho;
+    }
+
+    private ItemCarrinho rsToItemCarrinhoWithCarrinho(ResultSet rs, Carrinho carrinho) throws SQLException {
+        ItemCarrinho itemCarrinho = mapItemCarrinho(rs);
+
+        itemCarrinho.setCarrinho(carrinho);
+        itemCarrinho.setProduto(mapProduto(rs));
+
+        return itemCarrinho;
+    }
+
+    private ItemCarrinho rsToItemCarrinhoWithProduto(ResultSet rs, Produto produto) throws SQLException {
+        ItemCarrinho itemCarrinho = mapItemCarrinho(rs);
+
+        itemCarrinho.setCarrinho(mapCarrinho(rs));
+        itemCarrinho.setProduto(produto);
+
+        return itemCarrinho;
+    }
+
+    private ItemCarrinho mapItemCarrinho(ResultSet rs) throws SQLException {
+        ItemCarrinho itemCarrinho = new ItemCarrinho();
+        itemCarrinho.setId(UUID.fromString(rs.getString("id")));
+        itemCarrinho.setQuantidade(rs.getInt("quantidade"));
+        return itemCarrinho;
+    }
+
+    private Carrinho mapCarrinho(ResultSet rs) throws SQLException {
         Carrinho carrinho = new Carrinho();
         carrinho.setId(UUID.fromString(rs.getString("carrinho_id")));
 
-        // Montar Cliente do Pedido
+        // O carrinho precisa do cliente populado
+        carrinho.setCliente(mapCliente(rs));
+
+        return carrinho;
+    }
+
+    private Cliente mapCliente(ResultSet rs) throws SQLException {
         Cliente cliente = new Cliente();
         cliente.setId(UUID.fromString(rs.getString("cliente_id")));
         cliente.setNome(rs.getString("cliente_nome"));
@@ -67,28 +186,26 @@ public class ItemCarrinhoSqlImpl implements ItemCarrinhoDAO {
         cliente.setEnderecoCep(rs.getString("cliente_cep"));
         cliente.setEnderecoNum(rs.getInt("cliente_numero"));
         cliente.setEnderecoComplemento(rs.getString("cliente_complemento"));
-        carrinho.setCliente(cliente);
+        return cliente;
+    }
 
-        // Montar Produto
+    private Produto mapProduto(ResultSet rs) throws SQLException {
         Produto produto = new Produto();
         produto.setId(UUID.fromString(rs.getString("produto_id")));
         produto.setNome(rs.getString("produto_nome"));
         produto.setPreco(rs.getDouble("produto_preco"));
 
-        // Montar Tipo do Produto
+        // O produto precisa do seu tipo populado
+        produto.setTipoProduto(mapTipoProduto(rs));
+
+        return produto;
+    }
+
+    private TipoProduto mapTipoProduto(ResultSet rs) throws SQLException {
         TipoProduto tipoProduto = new TipoProduto();
         tipoProduto.setId(UUID.fromString(rs.getString("tipo_id")));
         tipoProduto.setDescricao(rs.getString("tipo_descricao"));
-        produto.setTipoProduto(tipoProduto);
-
-        // Montar o ItemCarrinho
-        ItemCarrinho itemCarrinho = new ItemCarrinho();
-        itemCarrinho.setCarrinho(carrinho);
-        itemCarrinho.setProduto(produto);
-        itemCarrinho.setQuantidade(rs.getInt("quantidade"));
-        itemCarrinho.setId(UUID.fromString(rs.getString("id")));
-
-        return itemCarrinho;
+        return tipoProduto;
     }
 
 
@@ -116,7 +233,7 @@ public class ItemCarrinhoSqlImpl implements ItemCarrinhoDAO {
     public Optional<ItemCarrinho> findById(UUID id) throws SQLException, ClassNotFoundException {
         if (id == null) return Optional.empty();
 
-        String sql = fullQuerryById();
+        String sql = fullQueryById();
 
         try (Connection c = connector.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -136,7 +253,7 @@ public class ItemCarrinhoSqlImpl implements ItemCarrinhoDAO {
 
     @Override
     public Optional<List<ItemCarrinho>> searchAll() throws SQLException, ClassNotFoundException {
-        String sql = fullQuerryAll();
+        String sql = fullQueryAll();
         List<ItemCarrinho> itemCarrinhos = new ArrayList<>();
 
         try (Connection c = connector.getConnection();
@@ -144,8 +261,7 @@ public class ItemCarrinhoSqlImpl implements ItemCarrinhoDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                ItemCarrinho itemCarrinho = new ItemCarrinho();
-                itemCarrinhos.add(itemCarrinho);
+                itemCarrinhos.add(rsToItemCarrinhoFull(rs));
             }
         }
         return Optional.of(itemCarrinhos);
@@ -191,4 +307,47 @@ public class ItemCarrinhoSqlImpl implements ItemCarrinhoDAO {
         }
     }
 
+    @Override
+    public Optional<List<ItemCarrinho>> findByCarrinho(Carrinho carrinho) throws SQLException, ClassNotFoundException {
+        if (carrinho == null || carrinho.getId() == null) return Optional.empty();
+
+        String sql = queryByCarrinhoId();
+        List<ItemCarrinho> itemCarrinhos = new ArrayList<>();
+
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setString(1, carrinho.getId().toString());
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    itemCarrinhos.add(rsToItemCarrinhoWithCarrinho(rs, carrinho));
+                }
+            }
+        }
+        return Optional.of(itemCarrinhos);
+    }
+
+    @Override
+    public Optional<List<ItemCarrinho>> findByProduto(Produto produto) throws SQLException, ClassNotFoundException {
+        if (produto == null || produto.getId() == null) return Optional.empty();
+
+        String sql = queryByProdutoId();
+        List<ItemCarrinho> itemCarrinhos = new ArrayList<>();
+
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setString(1, produto.getId().toString());
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    itemCarrinhos.add(rsToItemCarrinhoWithProduto(rs, produto));
+                }
+            }
+        }
+        return Optional.of(itemCarrinhos);
+    }
 }
