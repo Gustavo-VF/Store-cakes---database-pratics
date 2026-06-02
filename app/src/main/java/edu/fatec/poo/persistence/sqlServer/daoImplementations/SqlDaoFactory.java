@@ -1,7 +1,6 @@
-package edu.fatec.poo.persistence.sqlServer;
+package edu.fatec.poo.persistence.sqlServer.daoImplementations;
 
 import edu.fatec.poo.persistence.daoIntefaces.*;
-import edu.fatec.poo.persistence.sqlServer.daoImplementations.*;
 
 public class SqlDaoFactory {
     private static CarrinhoDAO carrinhoDaoInstance;

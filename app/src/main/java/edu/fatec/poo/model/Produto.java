@@ -5,7 +5,7 @@ import java.util.UUID;
 public class Produto {
     private UUID id;
     private String nome;
-    private double preco;
+    private Double preco;
     private TipoProduto tipoProduto;
 
     public UUID getId() {
@@ -24,11 +24,11 @@ public class Produto {
         this.nome = nome;
     }
 
-    public double getPreco() {
+    public Double getPreco() {
         return preco;
     }
 
-    public void setPreco(double preco) {
+    public void setPreco(Double preco) {
         this.preco = preco;
     }
 
