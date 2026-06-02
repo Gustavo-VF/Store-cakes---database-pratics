@@ -22,16 +22,6 @@ public class ClienteSqlImpl implements ClienteDAO {
         this.connector = new ConfiguredSqlConnector().getConector();
     }
 
-    /*
-        private UUID Id;
-        private String nome;
-        private String email;
-        private String senha;
-        private String enderecoLogradouro;
-        private String enderecoCep;
-        private int enderecoNum;
-        private String enderecoComplemento;
-     */
     @Override
     public Optional<Cliente> add(Cliente cliente) throws SQLException, ClassNotFoundException {
         if (cliente == null || cliente.getId() == null) return Optional.empty();

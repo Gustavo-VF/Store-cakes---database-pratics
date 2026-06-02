@@ -5,7 +5,7 @@ import edu.fatec.poo.persistence.connection.ICreateDB;
 import edu.fatec.poo.persistence.connection.ICreateTable;
 import edu.fatec.poo.persistence.sqlServer.create.SqlServerConnector;
 import edu.fatec.poo.persistence.sqlServer.create.SqlServerCreateDB;
-import edu.fatec.poo.persistence.sqlServer.create.sqlServerCreateTable;
+import edu.fatec.poo.persistence.sqlServer.create.SqlServerCreateTable;
 
 import java.sql.Connection;
 
@@ -48,7 +48,7 @@ public class ConfiguredSqlConnector {
                     "12345678"
             );
             try (Connection connection = connector.getConnection()) {
-                ICreateTable createTable = new sqlServerCreateTable(connector);
+                ICreateTable createTable = new SqlServerCreateTable(connector);
                 createTable.createTableAll();
             }
         } catch (Exception e) {

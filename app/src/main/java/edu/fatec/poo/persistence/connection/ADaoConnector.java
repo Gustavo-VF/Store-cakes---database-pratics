@@ -5,11 +5,11 @@ import java.sql.SQLException;
 
 public abstract class ADaoConnector {
 
-    protected String porta;
-    protected String hostname;
-    protected String dbName;
-    protected String user;
-    protected String senha;
+    protected final String porta;
+    protected final String hostname;
+    protected final String dbName;
+    protected final String user;
+    protected final String senha;
 
     public ADaoConnector(String hostname, String porta, String dbName, String user, String senha) {
         this.hostname = hostname;
