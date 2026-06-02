@@ -168,4 +168,30 @@ public class ClienteSqlImpl implements ClienteDAO {
     private String fullQuerryById() {
         return fullQuerry().append(" WHERE id = ?;").toString();
     }
+
+    private String fullQuerryByEmail() {
+        return fullQuerry().append(" WHERE email = ?;").toString();
+    }
+
+    @Override
+    public Optional<Cliente> findByEmail(String email) throws SQLException, ClassNotFoundException {
+        if (email == null || email.isBlank()) return Optional.empty();
+
+        String sql = fullQuerryByEmail();
+
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Cliente cliente = rsToClienteFull(rs);
+                    return Optional.of(cliente);
+                } else {
+                    return Optional.empty();
+                }
+            }
+        }
+    }
 }
