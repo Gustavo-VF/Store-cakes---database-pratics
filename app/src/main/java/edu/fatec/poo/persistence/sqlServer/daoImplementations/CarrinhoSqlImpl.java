@@ -158,4 +158,60 @@ public class CarrinhoSqlImpl implements CarrinhoDAO {
     private String fullQuerryById() {
         return fullQuerry().append(" WHERE car.id = ?;").toString();
     }
+
+    @Override
+    public Optional<Carrinho> findByCliente(Cliente cliente) throws SQLException, ClassNotFoundException {
+        if (cliente == null || cliente.getId() == null) return Optional.empty();
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ");
+        sql.append("car.id AS carrinho_id ");
+        sql.append("FROM ").append(tableName).append(" car ");
+        sql.append("WHERE car.cliente = ?;");
+
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql.toString())) {
+
+            ps.setString(1, cliente.getId().toString());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Carrinho carrinho = new Carrinho();
+                    carrinho.setId(UUID.fromString(rs.getString("carrinho_id")));
+                    carrinho.setCliente(cliente);
+                    return Optional.of(carrinho);
+                } else {
+                    return Optional.empty();
+                }
+            }
+        }
+    }
+
+    @Override
+    public Optional<List<Carrinho>> findByClienteMult(Cliente cliente) throws SQLException, ClassNotFoundException {
+        if (cliente == null || cliente.getId() == null) return Optional.empty();
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT car.id AS carrinho_id ");
+        sql.append("FROM ").append(tableName).append(" car ");
+        sql.append("WHERE car.cliente = ?;");
+        List<Carrinho> carrinhos = new ArrayList<>();
+
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql.toString())) {
+
+            ps.setString(1, cliente.getId().toString());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Carrinho carrinho = new Carrinho();
+                    carrinho.setId(UUID.fromString(rs.getString("carrinho_id")));
+                    carrinho.setCliente(cliente);
+
+                    carrinhos.add(carrinho);
+                }
+            }
+        }
+        return Optional.of(carrinhos);
+    }
 }
