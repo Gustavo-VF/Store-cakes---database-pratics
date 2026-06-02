@@ -107,7 +107,7 @@ public class sqlServerCreateTable implements ICreateTable {
                     CREATE TABLE pedido (
                         id VARCHAR(36) PRIMARY KEY,
                         cliente VARCHAR(36) NOT NULL,
-                        preco_total NUMERIC(8,2) NOT NULL,
+                        --preco_total NUMERIC(8,2) NOT NULL,
                         data DATE NOT NULL,
                         status VARCHAR(100) NOT NULL,
                         FOREIGN KEY (cliente) REFERENCES cliente(id)
