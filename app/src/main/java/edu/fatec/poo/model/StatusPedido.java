@@ -4,6 +4,6 @@ public enum StatusPedido {
     ANDAMENTO(),
     COMPLETO(),
     CANCELADO(),
-    ENTREQUE()
-    
+    ENTREGUE()
+
 }
