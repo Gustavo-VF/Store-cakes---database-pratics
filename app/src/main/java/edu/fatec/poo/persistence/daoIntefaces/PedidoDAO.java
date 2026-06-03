@@ -4,6 +4,7 @@ import edu.fatec.poo.model.Cliente;
 import edu.fatec.poo.model.Pedido;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,4 +33,9 @@ public interface PedidoDAO extends BasicDAO<Pedido> {
      * @throws ClassNotFoundException Se o driver JDBC do banco de dados não for localizado.
      */
     Optional<List<Pedido>> findByCliente(Cliente cliente) throws SQLException, ClassNotFoundException;
+
+    Optional<List<Pedido>> getSoldByMonth(LocalDate date) throws SQLException, ClassNotFoundException;
+
+    Optional<List<Pedido>> getSoldByDay(LocalDate date) throws SQLException, ClassNotFoundException;
+
 }

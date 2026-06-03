@@ -31,4 +31,8 @@ public interface TipoProdutoDAO extends BasicDAO<TipoProduto> {
      * @throws ClassNotFoundException Se o driver JDBC do banco de dados não for localizado.
      */
     Optional<List<TipoProduto>> findByDescricao(String descricao) throws SQLException, ClassNotFoundException;
+
+    Optional<List<TipoProduto>> findByMostSoldTop10() throws SQLException, ClassNotFoundException;
+
+    Optional<List<TipoProduto>> findByLeastSoldTop10() throws SQLException, ClassNotFoundException;
 }

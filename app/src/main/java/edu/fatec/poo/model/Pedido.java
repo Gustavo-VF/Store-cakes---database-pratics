@@ -6,7 +6,7 @@ import java.util.UUID;
 public class Pedido {
     private UUID id;
     private Cliente cliente;
-    private double precoTotal;
+    private Double precoTotal;
     private LocalDate data;
     private StatusPedido status;
 
@@ -26,11 +26,11 @@ public class Pedido {
         this.cliente = cliente;
     }
 
-    public double getPrecoTotal() {
+    public Double getPrecoTotal() {
         return precoTotal;
     }
 
-    public void setPrecoTotal(double precoTotal) {
+    public void setPrecoTotal(Double precoTotal) {
         this.precoTotal = precoTotal;
     }
 
