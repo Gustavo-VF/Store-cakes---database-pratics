@@ -1,5 +1,6 @@
 package edu.fatec.poo.persistence.sqlServer.daoImplementations;
 
+import edu.fatec.poo.model.StatusPedido;
 import edu.fatec.poo.model.TipoProduto;
 import edu.fatec.poo.persistence.connection.ADaoConnector;
 import edu.fatec.poo.persistence.daoIntefaces.TipoProdutoDAO;
@@ -17,6 +18,9 @@ import java.util.UUID;
 public class TipoProdutoSqlImpl implements TipoProdutoDAO {
 
     private final String tableName = "tipo_produto";
+    private final String tableProdutoName = "produto";
+    private final String tableItemPedidoName = "item_pedido";
+    private final String tablePedidoName = "pedido";
     private final ADaoConnector connector;
 
     public TipoProdutoSqlImpl() {
@@ -41,6 +45,44 @@ public class TipoProdutoSqlImpl implements TipoProdutoDAO {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT id, descricao FROM ").append(tableName);
         return sql;
+    }
+
+    private String queryMostSoldTop10() {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT TOP(10) ");
+        sql.append("tipo.id AS id, ");
+        sql.append("tipo.descricao AS descricao, ");
+        sql.append("SUM(item_ped.quantidade) AS qtd_vendida ");
+        sql.append("FROM ").append(tableName).append(" tipo ");
+        sql.append("INNER JOIN ").append(tableProdutoName).append(" prod ");
+        sql.append("   ON prod.tipo_produto = tipo.id ");
+        sql.append("INNER JOIN ").append(tableItemPedidoName).append(" item_ped ");
+        sql.append("   ON item_ped.produto = prod.id ");
+        sql.append("INNER JOIN ").append(tablePedidoName).append(" ped ");
+        sql.append("   ON ped.id = item_ped.pedido ");
+        sql.append("WHERE ped.status LIKE '%").append(StatusPedido.COMPLETO.name()).append("%' ");
+        sql.append("GROUP BY tipo.id, tipo.descricao ");
+        sql.append("ORDER BY SUM(item_ped.quantidade) DESC;");
+        return sql.toString();
+    }
+
+    private String queryLeastSoldTop10() {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT TOP(10) ");
+        sql.append("tipo.id AS id, ");
+        sql.append("tipo.descricao AS descricao, ");
+        sql.append("SUM(item_ped.quantidade) AS qtd_vendida ");
+        sql.append("FROM ").append(tableName).append(" tipo ");
+        sql.append("INNER JOIN ").append(tableProdutoName).append(" prod ");
+        sql.append("   ON prod.tipo_produto = tipo.id ");
+        sql.append("INNER JOIN ").append(tableItemPedidoName).append(" item_ped ");
+        sql.append("   ON item_ped.produto = prod.id ");
+        sql.append("INNER JOIN ").append(tablePedidoName).append(" ped ");
+        sql.append("   ON ped.id = item_ped.pedido ");
+        sql.append("WHERE ped.status LIKE '%").append(StatusPedido.COMPLETO.name()).append("%' ");
+        sql.append("GROUP BY tipo.id, tipo.descricao ");
+        sql.append("ORDER BY SUM(item_ped.quantidade);");
+        return sql.toString();
     }
 
     // --- Mapeadores de ResultSet (Mappers) ---
@@ -171,5 +213,37 @@ public class TipoProdutoSqlImpl implements TipoProdutoDAO {
             }
         }
         return Optional.of(tipoProdutos);
+    }
+
+    @Override
+    public Optional<List<TipoProduto>> findByMostSoldTop10() throws SQLException, ClassNotFoundException {
+        String sql = queryMostSoldTop10();
+        List<TipoProduto> produtos = new ArrayList<>();
+
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                produtos.add(rsToTipoProduto(rs));
+            }
+        }
+        return Optional.of(produtos);
+    }
+
+    @Override
+    public Optional<List<TipoProduto>> findByLeastSoldTop10() throws SQLException, ClassNotFoundException {
+        String sql = queryLeastSoldTop10();
+        List<TipoProduto> produtos = new ArrayList<>();
+
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                produtos.add(rsToTipoProduto(rs));
+            }
+        }
+        return Optional.of(produtos);
     }
 }
