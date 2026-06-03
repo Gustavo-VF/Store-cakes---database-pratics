@@ -2,9 +2,9 @@ package edu.fatec.poo.persistence.daoIntefaces;
 
 import edu.fatec.poo.model.Cliente;
 import edu.fatec.poo.model.Pedido;
+import edu.fatec.poo.model.RelatorioPedidoProduto;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,8 +34,8 @@ public interface PedidoDAO extends BasicDAO<Pedido> {
      */
     Optional<List<Pedido>> findByCliente(Cliente cliente) throws SQLException, ClassNotFoundException;
 
-    Optional<List<Pedido>> getSoldByMonth(LocalDate date) throws SQLException, ClassNotFoundException;
+    Optional<List<RelatorioPedidoProduto>> getSoldInLastYear() throws SQLException, ClassNotFoundException;
 
-    Optional<List<Pedido>> getSoldByDay(LocalDate date) throws SQLException, ClassNotFoundException;
+    Optional<List<RelatorioPedidoProduto>> getSoldInLastMonth() throws SQLException, ClassNotFoundException;
 
 }
