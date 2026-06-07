@@ -14,27 +14,24 @@ public class SqlServerCreateDB implements ICreateDB {
 
     public SqlServerCreateDB(ADaoConnector connector, String dbName) {
         this.connector = connector;
-        this.dbName = dbName;
+        this.dbName = dbName.replaceAll("[^a-zA-Z0-9_]", "");
     }
 
     @Override
     public void createDatabase() throws SQLException, ClassNotFoundException {
-        String sql = """
-                IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = ?) 
-                BEGIN 
-                  CREATE DATABASE ? 
-                END;
-                """;
+        StringBuilder sql = new StringBuilder();
+        sql.append("IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '").append(dbName).append("')");
+        sql.append("BEGIN ");
+        sql.append("    CREATE DATABASE ").append(dbName).append(" ");
+        sql.append("END;");
 
         try (Connection connection = connector.getConnection();
-             PreparedStatement st = connection.prepareStatement(sql)
+             PreparedStatement st = connection.prepareStatement(sql.toString())
         ) {
-            st.setString(1, dbName);
-            st.setString(2, dbName);
             st.executeUpdate();
             System.out.println("[SQL Server] Operação de criação concluída ou banco já existente.");
         } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("[SQL Server] Erro ao criar banco no: " + e.getMessage());
+            System.err.println("[SQL Server] Erro ao criar banco: " + e.getMessage());
             throw e;
         }
     }

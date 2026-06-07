@@ -7,50 +7,30 @@ import edu.fatec.poo.persistence.sqlServer.create.SqlServerConnector;
 import edu.fatec.poo.persistence.sqlServer.create.SqlServerCreateDB;
 import edu.fatec.poo.persistence.sqlServer.create.SqlServerCreateTable;
 
-import java.sql.Connection;
-
 public class ConfiguredSqlConnector {
 
     private final String dbName = "store_cakes";
-    private final String porta = "3306";
+    private final String porta = "1433"; // Corrigido para a porta padrão do SQL Server
+    private final String hostname = "localhost";
+    private final String user = "sa";
+    private final String senha = "qwer@1234";
+
     private ADaoConnector conector;
 
     public ConfiguredSqlConnector() {
-        conector = new SqlServerConnector(
-                "localhost",
-                porta,
-                dbName,
-                "root",
-                "12345678"
-        );
+        conector = new SqlServerConnector(hostname, porta, dbName, user, senha);
     }
 
-    public void buildMariaDb() {
+    public void buildDb() {
         ADaoConnector connector;
         try {
-            connector = new SqlServerConnector(
-                    "localhost",
-                    porta,
-                    "sys",
-                    "root",
-                    "12345678"
-            );
-            try (Connection connection = connector.getConnection()) {
-                ICreateDB createDB = new SqlServerCreateDB(connector, dbName);
-                createDB.createDatabase();
-            }
+            ADaoConnector bootstrapConnector = new SqlServerConnector(hostname, porta, "master", user, senha);
 
-            connector = new SqlServerConnector(
-                    "localhost",
-                    porta,
-                    dbName,
-                    "root",
-                    "12345678"
-            );
-            try (Connection connection = connector.getConnection()) {
-                ICreateTable createTable = new SqlServerCreateTable(connector);
-                createTable.createTableAll();
-            }
+            ICreateDB createDB = new SqlServerCreateDB(bootstrapConnector, dbName);
+            createDB.createDatabase();
+
+            ICreateTable createTable = new SqlServerCreateTable(conector);
+            createTable.createTableAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
