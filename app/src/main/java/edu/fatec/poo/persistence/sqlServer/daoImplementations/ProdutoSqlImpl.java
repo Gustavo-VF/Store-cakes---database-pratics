@@ -43,6 +43,10 @@ public class ProdutoSqlImpl implements ProdutoDAO {
         return fullQuery().append(" WHERE prod.tipo_produto = ?;").toString();
     }
 
+    private String fullQueryByVendedor() {
+        return fullQuery().append(" WHERE prod.vendedor = ?;").toString();
+    }
+
     private String fullQueryByPreco() {
         return fullQuery().append(" WHERE prod.preco >= ? AND prod.preco <= ?;").toString();
     }
@@ -272,6 +276,28 @@ public class ProdutoSqlImpl implements ProdutoDAO {
              PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, tipoProduto.getId().toString());
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    produtos.add(rsToProdutoFull(rs));
+                }
+            }
+        }
+        return Optional.of(produtos);
+    }
+
+    @Override
+    public Optional<List<Produto>> findByVendedor(Cliente vendedor) throws SQLException, ClassNotFoundException {
+        if (vendedor == null || vendedor.getId() == null) return Optional.empty();
+
+        List<Produto> produtos = new ArrayList<>();
+
+        String sql = fullQueryByVendedor();
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setString(1, vendedor.getId().toString());
 
             try (ResultSet rs = ps.executeQuery()) {
 

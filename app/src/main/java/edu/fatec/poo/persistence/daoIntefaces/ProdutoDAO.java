@@ -1,5 +1,6 @@
 package edu.fatec.poo.persistence.daoIntefaces;
 
+import edu.fatec.poo.model.Cliente;
 import edu.fatec.poo.model.Produto;
 import edu.fatec.poo.model.TipoProduto;
 
@@ -10,11 +11,12 @@ import java.util.Optional;
 /**
  * Interface de Acesso a Dados (DAO) especializada para a entidade {@link Produto}.
  * Herda as operações básicas de CRUD da interface {@link BasicDAO} e define
- * consultas avançadas baseadas em filtros de nome, categoria e faixas de preço.
+ * consultas avançadas baseadas em filtros de nome, categoria, vendedor e faixas de preço.
  *
  * @see BasicDAO
  * @see Produto
  * @see TipoProduto
+ * @see Cliente
  */
 public interface ProdutoDAO extends BasicDAO<Produto> {
 
@@ -43,6 +45,20 @@ public interface ProdutoDAO extends BasicDAO<Produto> {
      * @throws ClassNotFoundException Se o driver JDBC do banco de dados não for localizado.
      */
     Optional<List<Produto>> findByTipoProduto(TipoProduto tipoProduto) throws SQLException, ClassNotFoundException;
+
+    /**
+     * Busca todos os produtos associados a um determinado vendedor (cliente anunciado).
+     * <p>
+     * Utilizado em cenários de marketplace onde um {@link Cliente} também pode atuar como anunciante/vendedor.
+     * </p>
+     *
+     * @param vendedor O objeto {@link Cliente} que atua como o vendedor dos produtos.
+     * @return Um {@link Optional} contendo uma {@link List} com os produtos vinculados ao vendedor informado,
+     * ou um {@link Optional#empty()} caso o vendedor não possua produtos cadastrados ou a busca falhe.
+     * @throws SQLException           Se ocorrer um erro na sintaxe ou execução da query SQL.
+     * @throws ClassNotFoundException Se o driver JDBC do banco de dados não for localizado.
+     */
+    Optional<List<Produto>> findByVendedor(Cliente vendedor) throws SQLException, ClassNotFoundException;
 
     /**
      * Busca produtos cujos preços estejam compreendidos dentro do intervalo estipulado.
