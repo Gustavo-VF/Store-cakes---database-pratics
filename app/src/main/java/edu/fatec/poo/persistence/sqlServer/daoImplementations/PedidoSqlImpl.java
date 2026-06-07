@@ -1,9 +1,6 @@
 package edu.fatec.poo.persistence.sqlServer.daoImplementations;
 
-import edu.fatec.poo.model.Cliente;
-import edu.fatec.poo.model.Pedido;
-import edu.fatec.poo.model.RelatorioPedidoProduto;
-import edu.fatec.poo.model.StatusPedido;
+import edu.fatec.poo.model.*;
 import edu.fatec.poo.persistence.connection.ADaoConnector;
 import edu.fatec.poo.persistence.daoIntefaces.PedidoDAO;
 import edu.fatec.poo.persistence.sqlServer.ConfiguredSqlConnector;
@@ -18,8 +15,8 @@ public class PedidoSqlImpl implements PedidoDAO {
 
     private final String tableName = "pedido";
     private final String tableNameCliente = "cliente";
-    private final String tableNameItemPedido = "item_pedido"; // Nome padrão para os itens do pedido
-    private final String tableNameProduto = "produto";       // Tabela de onde vem o preço atual
+    private final String tableNameItemPedido = "item_pedido";
+    private final String tableNameProduto = "produto";
     private final ADaoConnector connector;
 
     public PedidoSqlImpl() {
@@ -63,7 +60,6 @@ public class PedidoSqlImpl implements PedidoDAO {
     private String queryByMonth() {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
-        // CORREÇÃO: Agrupa por mês/ano e gera uma data virtual (Dia 01) para não quebrar o mapeador Java
         sql.append("    DATEFROMPARTS(DATEPART(YEAR, ped.data), DATEPART(MONTH, ped.data), 1) AS data_pedido, ");
         sql.append("    prod.nome AS nome_do_produto, ");
         sql.append("    COUNT(DISTINCT ped.id) AS quantidade_de_pedidos, ");
@@ -111,7 +107,7 @@ public class PedidoSqlImpl implements PedidoDAO {
     }
 
     private StringBuilder appendPedidoColumns(StringBuilder sql) {
-        return sql.append("ped.id, ped.cliente, ped.data, ped.status");
+        return sql.append("ped.id AS id, ped.cliente AS cliente, ped.data AS data, ped.status AS status");
     }
 
     private StringBuilder appendSumPrecoTotal(StringBuilder sql) {
@@ -124,13 +120,13 @@ public class PedidoSqlImpl implements PedidoDAO {
 
     private StringBuilder appendClienteColumns(StringBuilder sql) {
         sql.append("cli.id AS cliente_id, cli.nome AS cliente_nome, cli.email AS cliente_email, cli.senha AS cliente_senha, ");
-        sql.append("cli.endereco_logradouro AS cliente_logradouro, cli.endereco_cep AS cliente_cep, ");
+        sql.append("cli.endereco_logradouro AS cliente_logradouro, cli.endereco_cep AS cliente_cep, cli.role AS cliente_role, ");
         sql.append("cli.endereco_num AS cliente_numero, cli.endereco_complemento AS cliente_complemento");
         return sql;
     }
 
     private StringBuilder joinCliente(StringBuilder sql) {
-        return sql.append("INNER JOIN ").append(tableNameCliente).append(" cli ON ped.cliente = cli.id ");
+        return sql.append(" INNER JOIN ").append(tableNameCliente).append(" cli ON ped.cliente = cli.id ");
     }
 
     private Pedido rsToPedidoFull(ResultSet rs) throws SQLException {
@@ -168,17 +164,12 @@ public class PedidoSqlImpl implements PedidoDAO {
         cliente.setId(UUID.fromString(rs.getString("cliente_id")));
         cliente.setNome(rs.getString("cliente_nome"));
         cliente.setEmail(rs.getString("cliente_email"));
-
-        try {
-            cliente.setSenha(rs.getString("cliente_senha"));
-        } catch (SQLException e) {
-            cliente.setSenha(null);
-        }
-
+        cliente.setSenha(rs.getString("cliente_senha"));
         cliente.setEnderecoLogradouro(rs.getString("cliente_logradouro"));
         cliente.setEnderecoCep(rs.getString("cliente_cep"));
         cliente.setEnderecoNum(rs.getInt("cliente_numero"));
         cliente.setEnderecoComplemento(rs.getString("cliente_complemento"));
+        cliente.setRole(Role.valueOf(rs.getString("cliente_role")));
         return cliente;
     }
 

@@ -10,7 +10,7 @@ import edu.fatec.poo.persistence.sqlServer.create.SqlServerCreateTable;
 public class ConfiguredSqlConnector {
 
     private final String dbName = "store_cakes";
-    private final String porta = "1433"; // Corrigido para a porta padrão do SQL Server
+    private final String porta = "1433";
     private final String hostname = "localhost";
     private final String user = "sa";
     private final String senha = "qwer@1234";
@@ -18,6 +18,7 @@ public class ConfiguredSqlConnector {
     private ADaoConnector conector;
 
     public ConfiguredSqlConnector() {
+
         conector = new SqlServerConnector(hostname, porta, dbName, user, senha);
     }
 

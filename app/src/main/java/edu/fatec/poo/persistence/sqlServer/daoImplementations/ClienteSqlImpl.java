@@ -1,6 +1,7 @@
 package edu.fatec.poo.persistence.sqlServer.daoImplementations;
 
 import edu.fatec.poo.model.Cliente;
+import edu.fatec.poo.model.Role;
 import edu.fatec.poo.persistence.connection.ADaoConnector;
 import edu.fatec.poo.persistence.daoIntefaces.ClienteDAO;
 import edu.fatec.poo.persistence.sqlServer.ConfiguredSqlConnector;
@@ -27,8 +28,8 @@ public class ClienteSqlImpl implements ClienteDAO {
         if (cliente == null || cliente.getId() == null) return Optional.empty();
 
         String sql = "INSERT INTO " + tableName + " " +
-                "(id, nome, email, senha, endereco_logradouro, endereco_cep, endereco_num, endereco_complemento) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+                "(id, nome, email, senha, endereco_logradouro, endereco_cep, endereco_num, endereco_complemento, role) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         try (Connection c = connector.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
 
@@ -40,6 +41,7 @@ public class ClienteSqlImpl implements ClienteDAO {
             ps.setString(6, cliente.getEnderecoCep());
             ps.setInt(7, cliente.getEnderecoNum());
             ps.setString(8, cliente.getEnderecoComplemento());
+            ps.setString(9, cliente.getRole().name());
 
             int colunasAfetadas = ps.executeUpdate();
             return colunasAfetadas > 0 ? Optional.of(cliente) : Optional.empty();
@@ -93,7 +95,7 @@ public class ClienteSqlImpl implements ClienteDAO {
 
         String sql = "UPDATE " + tableName + " " +
                 "SET nome = ?, email = ?, senha = ?, endereco_logradouro = ?, endereco_cep = ?, " +
-                "endereco_num = ? , endereco_complemento = ? " +
+                "endereco_num = ? , endereco_complemento = ? , role = ?" +
                 "WHERE id = ?;";
         try (Connection c = connector.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -105,7 +107,9 @@ public class ClienteSqlImpl implements ClienteDAO {
             ps.setString(5, cliente.getEnderecoCep());
             ps.setInt(6, cliente.getEnderecoNum());
             ps.setString(7, cliente.getEnderecoComplemento());
-            ps.setString(8, cliente.getId().toString());
+            ps.setString(8, cliente.getRole().name());
+            
+            ps.setString(9, cliente.getId().toString());
 
             int colunasAfetadas = ps.executeUpdate();
             return colunasAfetadas > 0 ? Optional.of(cliente) : Optional.empty();
@@ -138,6 +142,7 @@ public class ClienteSqlImpl implements ClienteDAO {
         cliente.setEnderecoCep(rs.getString("endereco_cep"));
         cliente.setEnderecoNum(rs.getInt("endereco_num"));
         cliente.setEnderecoComplemento(rs.getString("endereco_complemento"));
+        cliente.setRole(Role.valueOf(rs.getString("role")));
 
         return cliente;
     }
@@ -145,7 +150,7 @@ public class ClienteSqlImpl implements ClienteDAO {
     private StringBuilder fullQuerry() {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
-        sql.append("id, nome, email, senha, endereco_logradouro, endereco_cep, endereco_num, endereco_complemento ");
+        sql.append("id, nome, email, senha, endereco_logradouro, endereco_cep, endereco_num, endereco_complemento, role ");
         sql.append("FROM ").append(tableName).append(" ");
         return sql;
     }

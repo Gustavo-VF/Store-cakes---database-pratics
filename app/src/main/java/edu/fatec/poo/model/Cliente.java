@@ -11,6 +11,7 @@ public class Cliente {
     private String enderecoCep;
     private Integer enderecoNum;
     private String enderecoComplemento;
+    private Role role;
 
     public UUID getId() {
         return Id;
@@ -74,5 +75,13 @@ public class Cliente {
 
     public void setEnderecoComplemento(String enderecoComplemento) {
         this.enderecoComplemento = enderecoComplemento;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
