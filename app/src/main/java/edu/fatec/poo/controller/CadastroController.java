@@ -105,7 +105,7 @@ public class CadastroController {
         } catch (
 
         Exception e) {
-            mensagem.set("erro ai conectar no BD.");
+            mensagem.set("Erro ao conectar no BD.");
             e.printStackTrace();
         }
 
