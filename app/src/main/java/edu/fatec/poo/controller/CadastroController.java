@@ -3,6 +3,7 @@ package edu.fatec.poo.controller;
 import java.util.UUID;
 
 import edu.fatec.poo.model.Cliente;
+import edu.fatec.poo.model.Role;
 import edu.fatec.poo.persistence.sqlServer.daoImplementations.ClienteSqlImpl;
 import edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;
 import javafx.beans.property.SimpleStringProperty;
@@ -93,6 +94,7 @@ public class CadastroController {
             if (!numero.get().isEmpty()) {
                 novoCliente.setEnderecoNum(Integer.parseInt(numero.get()));
             }
+            novoCliente.setRole(Role.COMPRADOR);
 
             ClienteSqlImpl ClienteSQL = new ClienteSqlImpl();
 
