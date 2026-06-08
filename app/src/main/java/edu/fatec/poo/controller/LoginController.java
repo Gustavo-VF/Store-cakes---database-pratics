@@ -1,49 +1,69 @@
-package edu.fatec.poo.controller; 
+package edu.fatec.poo.controller;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
-import java.io.IOException;
+import javafx.beans.property.StringProperty;
+import javafx.beans.property.SimpleStringProperty;
+
+import java.util.UUID;
+
+import edu.fatec.poo.Contexto;
+import edu.fatec.poo.model.Carrinho;
+import edu.fatec.poo.model.Cliente;
+import edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;
+import edu.fatec.poo.view.InicioView;
 
 public class LoginController {
 
-    @FXML
-    private Label btn_Cadastro;
+    private StringProperty email = new SimpleStringProperty("");
+    private StringProperty senha = new SimpleStringProperty("");
+    private StringProperty mensagem = new SimpleStringProperty("");
 
-    @FXML
-    void TelaCadastro(MouseEvent event) {
+    public void fazerLogin() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/UICadastro.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle("Cadastro");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar a tela de cadastro: " + e.getMessage());
+            var resultado = SqlDaoFactory.getClienteDao().findByEmail(email.get());
+
+            if (resultado.isEmpty()) {
+                mensagem.set("E-mail: " + email.get() + " não cadastrado.");
+                return;
+            }
+            Cliente cliente = resultado.get();
+
+            if (!cliente.getSenha().equals(senha.get())) {
+                mensagem.set("Senha incorreta.");
+                return;
+            }
+
+            Contexto.setClienteLogado(cliente);
+
+            var carrinhoR = SqlDaoFactory.getCarrinhoDAO().findByCliente(cliente);
+
+            if (carrinhoR.isPresent()) {
+
+                Contexto.setCarrinhoAtivo(carrinhoR.get());
+
+            } else {
+                Carrinho novCarrinho = new Carrinho();
+                novCarrinho.setId(UUID.randomUUID());
+                novCarrinho.setCliente(cliente);
+                var novoCarrinho = SqlDaoFactory.getCarrinhoDAO().add(novCarrinho);
+                Contexto.setCarrinhoAtivo(novCarrinho);
+            }
+            Contexto.chamaOutraTela(new InicioView(), "Inicio");
+
+        } catch (Exception e) {
+            mensagem.set("erro ai conectar no BD.");
             e.printStackTrace();
         }
     }
 
-    @FXML
-    private Button btn_Entrar;
+    public StringProperty emailProperty() {
+        return email;
+    }
 
-    //Metodo de teste sera apagasdo depois
-    @FXML 
-    void TestePerfil(MouseEvent event){
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/UIPerfil.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle("Perfil");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar tela de Perfil: " + e.getMessage());
-        }
+    public StringProperty senhaProperty() {
+        return senha;
+    }
+
+    public StringProperty mensagemProperty() {
+        return mensagem;
     }
 }

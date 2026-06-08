@@ -49,7 +49,7 @@ public class CadastroView extends VBox {
         txtCep.setMaxWidth(300);
 
         TextField txtNumero = new TextField();
-        txtNumero.setPromptText("Numero");
+        txtNumero.setPromptText("Numero do Endereço");
         txtNumero.setMaxWidth(300);
 
         TextField txtComplemento = new TextField();

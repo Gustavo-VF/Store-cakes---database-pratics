@@ -1,62 +1,148 @@
 package edu.fatec.poo.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.fatec.poo.Contexto;
 import edu.fatec.poo.model.ItemCarrinho;
-import edu.fatec.poo.model.Produto;
-import edu.fatec.poo.model.TipoProduto;
+
+import edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;
+import edu.fatec.poo.view.CompraView;
+import javafx.beans.property.StringProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class CarrinhoController {
 
     private ObservableList<ItemCarrinho> itens = FXCollections.observableArrayList();
+    private List<ItemCarrinho> itensSelecionados = new ArrayList<>();
+
+    private StringProperty mensagem = new SimpleStringProperty("");
+    private StringProperty total = new SimpleStringProperty("Total " + "R$: 00.00");
 
     public void Pesquisar() {
     }
 
     public void CarregarItens() {
-        TipoProduto tipoPronto = new TipoProduto();
-        tipoPronto.setDescricao("Pronto para entrega");
+        try {
 
-        Produto p1 = new Produto();
-        p1.setNome("Bolo de Chocolate");
-        p1.setPreco(45.00);
-        p1.setTipoProduto(tipoPronto);
+            var carrinho = Contexto.getCarrinhoAtivo();
+            if (carrinho == null) {
+                mensagem.set("Carrinho vazio");
+            }
+            var resCarrinho = SqlDaoFactory.getItemCarrinhoDao().findByCarrinho(carrinho);
 
-        Produto p2 = new Produto();
-        p2.setNome("Bolo de Morango");
-        p2.setPreco(50.00);
-        p2.setTipoProduto(tipoPronto);
+            resCarrinho.ifPresent(Lista -> itens.setAll(Lista));
+        } catch (
 
-        ItemCarrinho ic1 = new ItemCarrinho();
-        ic1.setProduto(p1);
-        ic1.setQuantidade(1);
+        Exception e) {
 
-        ItemCarrinho ic2 = new ItemCarrinho();
-        ic2.setProduto(p2);
-        ic2.setQuantidade(2);
+        }
 
-        Produto p3 = new Produto();
-        p3.setNome("Bolo de Chocolate");
-        p3.setPreco(45.00);
-        p3.setTipoProduto(tipoPronto);
+    }
 
-        Produto p4 = new Produto();
-        p4.setNome("Bolo de Morango");
-        p4.setPreco(50.00);
-        p4.setTipoProduto(tipoPronto);
+    public void atualizarQuantidade(ItemCarrinho item, int qtd) {
+        try {
+            item.setQuantidade(qtd);
+            SqlDaoFactory.getItemCarrinhoDao().update(item);
+        } catch (Exception e) {
+            mensagem.set("erro ai atualizar qtd");
+            e.printStackTrace();
+        }
 
-        ItemCarrinho ic3 = new ItemCarrinho();
-        ic3.setProduto(p3);
-        ic3.setQuantidade(1);
+        calcTotal();
 
-        ItemCarrinho ic4 = new ItemCarrinho();
-        ic4.setProduto(p4);
-        ic4.setQuantidade(2);
+    }
 
-        itens.addAll(ic1, ic2, ic3, ic4);
+    public void removeItem(ItemCarrinho item) {
+        try {
+            SqlDaoFactory.getItemCarrinhoDao().delete(item);
+            itensSelecionados.remove(item);
+            itens.remove(item);
+        } catch (Exception e) {
+            mensagem.set("erro ao remover item");
+            e.printStackTrace();
+
+        }
+
+    }
+
+    public void ComprarTodos() {
+        for (ItemCarrinho itemCarrinho : itens) {
+            if (!itensSelecionados.contains(itemCarrinho)) {
+                itensSelecionados.add(itemCarrinho);
+
+            }
+
+        }
+        comprar();
+
+    }
+
+    public void comprar() {
+        if (itensSelecionados.isEmpty()) {
+            mensagem.set("Selecione pelo menos um item do carrinho.");
+            return;
+        }
+
+        Contexto.chamaOutraTela(new CompraView(itensSelecionados), "Comprar");
+
+    }
+
+    public void esvaziarCarrinho() {
+        try {
+            for (ItemCarrinho item : itens) {
+                if (itensSelecionados.contains(item)) {
+                    itensSelecionados.remove(item);
+                }
+                SqlDaoFactory.getItemCarrinhoDao().delete(item);
+            }
+            itens.clear();
+        } catch (Exception e) {
+            mensagem.set("erro ao exsvaziar carrinho");
+            e.printStackTrace();
+        }
+    }
+
+    public void selecionarItem(ItemCarrinho item, boolean select) {
+        if (select) {
+            itensSelecionados.add(item);
+        } else {
+            itensSelecionados.remove(item);
+        }
+
+        calcTotal();
+
+    }
+
+    public void calcTotal() {
+        double calculo = 0.0;
+
+        for (ItemCarrinho item : itensSelecionados) {
+
+            calculo += (item.getProduto().getPreco()) * (item.getQuantidade());
+
+        }
+
+        total.set(String.format("Total: R$ %.2f", calculo));
+
     }
 
     public ObservableList<ItemCarrinho> getItemCarrinho() {
         return itens;
     }
+
+    public StringProperty mensagemProperty() {
+        return mensagem;
+    }
+
+    public StringProperty totalProperty() {
+        return total;
+    }
+
+    public List<ItemCarrinho> getItemSelecionado() {
+        return itensSelecionados;
+    }
+
 }

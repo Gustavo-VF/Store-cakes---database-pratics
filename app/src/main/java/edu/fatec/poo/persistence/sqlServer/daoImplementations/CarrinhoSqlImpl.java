@@ -27,14 +27,16 @@ public class CarrinhoSqlImpl implements CarrinhoDAO {
 
     @Override
     public Optional<Carrinho> add(Carrinho carrinho) throws SQLException, ClassNotFoundException {
-        if (carrinho == null || carrinho.getId() == null) return Optional.empty();
-        if (carrinho.getCliente() == null || carrinho.getCliente().getId() == null) return Optional.empty();
+        if (carrinho == null || carrinho.getId() == null)
+            return Optional.empty();
+        if (carrinho.getCliente() == null || carrinho.getCliente().getId() == null)
+            return Optional.empty();
 
         String sql = "INSERT INTO " + tableName + " " +
                 "(id, cliente) " +
                 "VALUES (?, ?);";
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+                PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, carrinho.getId().toString());
             ps.setString(2, carrinho.getCliente().getId().toString());
@@ -44,15 +46,15 @@ public class CarrinhoSqlImpl implements CarrinhoDAO {
         }
     }
 
-
     @Override
     public Optional<Carrinho> findById(UUID id) throws SQLException, ClassNotFoundException {
-        if (id == null) return Optional.empty();
+        if (id == null)
+            return Optional.empty();
 
         String sql = fullQuerryById();
 
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+                PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, id.toString());
 
@@ -73,8 +75,8 @@ public class CarrinhoSqlImpl implements CarrinhoDAO {
         List<Carrinho> carrinhos = new ArrayList<>();
 
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = c.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Carrinho carrinho = rsToCarrinhoFull(rs);
@@ -86,14 +88,16 @@ public class CarrinhoSqlImpl implements CarrinhoDAO {
 
     @Override
     public Optional<Carrinho> update(Carrinho carrinho) throws SQLException, ClassNotFoundException {
-        if (carrinho == null || carrinho.getId() == null) return Optional.empty();
-        if (carrinho.getCliente() == null || carrinho.getCliente().getId() == null) return Optional.empty();
+        if (carrinho == null || carrinho.getId() == null)
+            return Optional.empty();
+        if (carrinho.getCliente() == null || carrinho.getCliente().getId() == null)
+            return Optional.empty();
 
         String sql = "UPDATE " + tableName + " " +
                 "SET cliente = ? " +
                 "WHERE id = ?;";
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+                PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, carrinho.getCliente().getId().toString());
             ps.setString(2, carrinho.getId().toString());
@@ -105,12 +109,13 @@ public class CarrinhoSqlImpl implements CarrinhoDAO {
 
     @Override
     public Optional<Carrinho> delete(Carrinho carrinho) throws SQLException, ClassNotFoundException {
-        if (carrinho == null || carrinho.getId() == null) return Optional.empty();
+        if (carrinho == null || carrinho.getId() == null)
+            return Optional.empty();
 
         String sql = "DELETE FROM " + tableName + " WHERE id = ?;";
 
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+                PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, carrinho.getId().toString());
 
@@ -150,7 +155,6 @@ public class CarrinhoSqlImpl implements CarrinhoDAO {
         return sql;
     }
 
-
     private String fullQuerryAll() {
         return fullQuerry().append(";").toString();
     }
@@ -161,7 +165,8 @@ public class CarrinhoSqlImpl implements CarrinhoDAO {
 
     @Override
     public Optional<Carrinho> findByCliente(Cliente cliente) throws SQLException, ClassNotFoundException {
-        if (cliente == null || cliente.getId() == null) return Optional.empty();
+        if (cliente == null || cliente.getId() == null)
+            return Optional.empty();
 
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
@@ -170,7 +175,7 @@ public class CarrinhoSqlImpl implements CarrinhoDAO {
         sql.append("WHERE car.cliente = ?;");
 
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql.toString())) {
+                PreparedStatement ps = c.prepareStatement(sql.toString())) {
 
             ps.setString(1, cliente.getId().toString());
 
@@ -189,7 +194,8 @@ public class CarrinhoSqlImpl implements CarrinhoDAO {
 
     @Override
     public Optional<List<Carrinho>> findByClienteMult(Cliente cliente) throws SQLException, ClassNotFoundException {
-        if (cliente == null || cliente.getId() == null) return Optional.empty();
+        if (cliente == null || cliente.getId() == null)
+            return Optional.empty();
 
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT car.id AS carrinho_id ");
@@ -198,7 +204,7 @@ public class CarrinhoSqlImpl implements CarrinhoDAO {
         List<Carrinho> carrinhos = new ArrayList<>();
 
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql.toString())) {
+                PreparedStatement ps = c.prepareStatement(sql.toString())) {
 
             ps.setString(1, cliente.getId().toString());
 

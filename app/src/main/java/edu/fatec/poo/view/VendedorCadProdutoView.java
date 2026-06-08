@@ -25,7 +25,6 @@ public class VendedorCadProdutoView extends VBox {
         setSpacing(0);
         setPrefSize(900, 600);
 
-        // ── Top Bar ──
         HBox top = new HBox(12);
         top.setPadding(new Insets(10, 16, 10, 16));
         top.setAlignment(Pos.CENTER_LEFT);
@@ -72,12 +71,10 @@ public class VendedorCadProdutoView extends VBox {
 
         top.getChildren().addAll(logo, txtPesquisa, titulo, btnMenu);
 
-        // ── Corpo ──
         HBox corpo = new HBox(20);
         corpo.setPadding(new Insets(20));
         VBox.setVgrow(corpo, Priority.ALWAYS);
 
-        // lado esquerdo
         VBox esquerda = new VBox(10);
         HBox.setHgrow(esquerda, Priority.ALWAYS);
 
@@ -113,7 +110,6 @@ public class VendedorCadProdutoView extends VBox {
 
         esquerda.getChildren().addAll(lblNome, txtNome, lblIngredientes, txtIngredientes, valorQtd);
 
-        // lado direito
         VBox direita = new VBox(12);
         direita.setAlignment(Pos.TOP_CENTER);
         direita.setPrefWidth(200);

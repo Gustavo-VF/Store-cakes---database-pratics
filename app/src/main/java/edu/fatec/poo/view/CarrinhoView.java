@@ -13,6 +13,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -36,9 +37,6 @@ public class CarrinhoView extends VBox {
         TextField txtPesquisa = new TextField();
         txtPesquisa.setPromptText("Pesquisar");
         txtPesquisa.setPrefWidth(180);
-        txtPesquisa.setOnAction(event -> {
-            cc.Pesquisar();
-        });
 
         Label titulo = new Label("INICIO");
         HBox.setHgrow(titulo, Priority.ALWAYS);
@@ -71,6 +69,7 @@ public class CarrinhoView extends VBox {
                     itemPedidos, itemSobreLoja, itemSair);
 
             menu.show(btnMenu, Side.BOTTOM, 0, 0);
+            cc.calcTotal();
         });
 
         top.getChildren().addAll(logo, txtPesquisa, titulo, btnMenu);
@@ -84,6 +83,7 @@ public class CarrinhoView extends VBox {
         cc.getItemCarrinho().addListener((javafx.collections.ListChangeListener<ItemCarrinho>) change -> {
 
             atualizarGrid(paneItens);
+            cc.calcTotal();
 
         });
 
@@ -96,28 +96,55 @@ public class CarrinhoView extends VBox {
         comprarTodos.setFont(Font.font(15));
         comprarTodos.setTextAlignment(TextAlignment.CENTER);
 
+        comprarTodos.setOnAction(e -> {
+            cc.ComprarTodos();
+            atualizarGrid(paneItens);
+        });
+
         Button comprarSelecionados = new Button("Comprar\nSelecionados");
         comprarSelecionados.setMaxWidth(300);
         comprarSelecionados.setFont(Font.font(15));
         comprarSelecionados.setTextAlignment(TextAlignment.CENTER);
+
+        comprarSelecionados.setOnAction(e -> {
+            cc.comprar();
+
+            atualizarGrid(paneItens);
+        });
 
         Button esvaziarCarrinho = new Button("Esvaziar\nCarrinho");
         esvaziarCarrinho.setMaxWidth(300);
         esvaziarCarrinho.setFont(Font.font(15));
         esvaziarCarrinho.setTextAlignment(TextAlignment.CENTER);
 
-        btnOpcoes.getChildren().addAll(comprarTodos, comprarSelecionados, esvaziarCarrinho);
+        esvaziarCarrinho.setOnAction(e -> {
+            cc.esvaziarCarrinho();
+            cc.calcTotal();
+
+        });
+
+        Label total = new Label();
+        total.textProperty().bind(cc.totalProperty());
+
+        btnOpcoes.getChildren().addAll(comprarTodos, comprarSelecionados, esvaziarCarrinho, total);
         btnOpcoes.setAlignment(Pos.CENTER);
         btnOpcoes.setPadding(new Insets(20));
         btnOpcoes.setSpacing(20);
 
         Label mensagem = new Label("");
 
+        mensagem.textProperty().bind(cc.mensagemProperty());
+
         HBox painelProtudos = new HBox();
 
         VBox.setVgrow(painelProtudos, Priority.ALWAYS);
 
-        painelProtudos.getChildren().addAll(paneItens, btnOpcoes);
+        ScrollPane scrollItens = new ScrollPane(paneItens);
+        scrollItens.setFitToWidth(true);
+        HBox.setHgrow(scrollItens, Priority.ALWAYS);
+        VBox.setVgrow(scrollItens, Priority.ALWAYS);
+
+        painelProtudos.getChildren().addAll(scrollItens, btnOpcoes);
 
         getChildren().addAll(top, painelProtudos, mensagem);
 
@@ -131,6 +158,7 @@ public class CarrinhoView extends VBox {
             HBox itemNoCarrinho = new HBox(5);
 
             CheckBox checkItem = new CheckBox();
+            checkItem.setSelected(cc.getItemSelecionado().contains(ic));
             checkItem.setMaxWidth(30);
             checkItem.setPrefWidth(30);
 
@@ -160,6 +188,10 @@ public class CarrinhoView extends VBox {
             menos.setFont(Font.font(15));
 
             Label numeroQuantidade = new Label("1");
+            if (cc.getItemSelecionado().contains(ic)) {
+                int quanQ = ic.getQuantidade();
+                numeroQuantidade.setText(String.valueOf(quanQ));
+            }
             numeroQuantidade.setFont(Font.font(15));
 
             Button mais = new Button("+");
@@ -181,16 +213,34 @@ public class CarrinhoView extends VBox {
             menos.setOnAction(e -> {
                 int qtd = Integer.parseInt(numeroQuantidade.getText());
                 if (qtd > 1) {
-                    numeroQuantidade.setText(String.valueOf(qtd - 1));
+                    qtd--;
+                    numeroQuantidade.setText(String.valueOf(qtd));
+                    cc.atualizarQuantidade(ic, qtd);
+                } else {
+                    ic.setQuantidade(0);
+                    cc.calcTotal();
+                    cc.removeItem(ic);
+
                 }
+                cc.calcTotal();
             });
 
-            mais.setOnAction(e -> {
+            mais.setOnAction(ev -> {
                 int qtd = Integer.parseInt(numeroQuantidade.getText());
-                numeroQuantidade.setText(String.valueOf(qtd + 1));
+                qtd++;
+                numeroQuantidade.setText(String.valueOf(qtd));
+                cc.atualizarQuantidade(ic, qtd);
+                cc.calcTotal();
+
+            });
+
+            checkItem.setOnAction(e -> {
+                cc.selecionarItem(ic, checkItem.isSelected());
+                cc.calcTotal();
             });
 
         }
+        cc.calcTotal();
     }
 
 }

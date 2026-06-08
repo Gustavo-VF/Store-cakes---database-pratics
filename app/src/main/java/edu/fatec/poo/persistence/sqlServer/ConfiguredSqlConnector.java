@@ -13,7 +13,7 @@ public class ConfiguredSqlConnector {
     private final String porta = "1433"; // Corrigido para a porta padrão do SQL Server
     private final String hostname = "localhost";
     private final String user = "sa";
-    private final String senha = "qwer@1234";
+    private final String senha = "Origami123!";
 
     private ADaoConnector conector;
 

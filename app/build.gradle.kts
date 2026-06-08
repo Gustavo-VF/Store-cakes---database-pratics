@@ -52,7 +52,7 @@ javafx {
 
 application {
     // Define the main class for the application.
-    mainClass = "edu.fatec.poo.view.UILogin"
+    mainClass = "edu.fatec.poo.App"
 }
 
 tasks.named<Test>("test") {

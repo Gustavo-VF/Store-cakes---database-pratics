@@ -1,8 +1,11 @@
 
 package edu.fatec.poo.view;
 
+import java.util.List;
+
 import edu.fatec.poo.Contexto;
 import edu.fatec.poo.controller.CompraController;
+import edu.fatec.poo.model.ItemCarrinho;
 import edu.fatec.poo.model.ItemPedido;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,11 +26,12 @@ public class CompraView extends VBox {
 
     CompraController cc = new CompraController();
 
-    public CompraView() {
+    public CompraView(List<ItemCarrinho> itensPraComprar) {
         setSpacing(0);
         setPrefSize(900, 600);
 
-        // ── Top Bar ──
+        cc.setItens(itensPraComprar);
+
         HBox top = new HBox(12);
         top.setPadding(new Insets(10, 16, 10, 16));
         top.setAlignment(Pos.CENTER_LEFT);
@@ -74,11 +78,9 @@ public class CompraView extends VBox {
 
         top.getChildren().addAll(logo, txtPesquisa, titulo, btnMenu);
 
-        // ── Corpo ──
         HBox corpo = new HBox(0);
         VBox.setVgrow(corpo, Priority.ALWAYS);
 
-        // lado esquerdo - lista de itens
         VBox esquerda = new VBox(8);
         esquerda.setPadding(new Insets(16));
         HBox.setHgrow(esquerda, Priority.ALWAYS);
@@ -88,18 +90,15 @@ public class CompraView extends VBox {
             for (ItemPedido item : cc.getItens()) {
                 HBox linha = new HBox(10);
                 linha.setPadding(new Insets(8));
-                linha.setStyle("-fx-border-color: #ddd; -fx-border-width: 0 0 1 0;");
 
                 VBox info = new VBox(4);
                 HBox.setHgrow(info, Priority.ALWAYS);
 
                 Label nome = new Label(item.getProduto().getNome());
-                nome.setFont(Font.font("System", FontWeight.BOLD, 13));
 
                 Label tipo = new Label(item.getProduto().getTipoProduto() != null
                         ? item.getProduto().getTipoProduto().getDescricao()
                         : "");
-                tipo.setStyle("-fx-font-size: 11px;");
 
                 info.getChildren().addAll(nome, tipo);
 
@@ -119,7 +118,6 @@ public class CompraView extends VBox {
         scroll.setFitToHeight(true);
         HBox.setHgrow(scroll, Priority.ALWAYS);
 
-        // lado direito - endereço
         VBox direita = new VBox(12);
         direita.setPadding(new Insets(16));
         direita.setPrefWidth(280);
@@ -135,19 +133,10 @@ public class CompraView extends VBox {
         txtEndereco.setMaxWidth(Double.MAX_VALUE);
         txtEndereco.textProperty().bindBidirectional(cc.enderecoProperty());
 
-        Label lblOu = new Label("ou");
-        lblOu.setMaxWidth(Double.MAX_VALUE);
-        lblOu.setAlignment(Pos.CENTER);
-
-        Button btnAdicionarEndereco = new Button("Adicionar Endereço");
-        btnAdicionarEndereco.setMaxWidth(Double.MAX_VALUE);
-        btnAdicionarEndereco.setOnAction(e -> cc.AdicionarEndereco());
-
-        direita.getChildren().addAll(lblEndereco, txtEndereco, lblOu, btnAdicionarEndereco);
+        direita.getChildren().addAll(lblEndereco, txtEndereco);
 
         corpo.getChildren().addAll(scroll, direita);
 
-        // ── Rodapé ──
         HBox rodape = new HBox(20);
         rodape.setPadding(new Insets(12, 16, 12, 16));
         rodape.setAlignment(Pos.CENTER_LEFT);

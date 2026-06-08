@@ -1,7 +1,12 @@
 package edu.fatec.poo.view;
 
+import java.util.UUID;
+
 import edu.fatec.poo.Contexto;
+import edu.fatec.poo.model.ItemCarrinho;
 import edu.fatec.poo.model.Produto;
+import edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;
+import edu.fatec.poo.persistence.sqlServer.daoImplementations.CarrinhoSqlImpl;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -84,15 +89,36 @@ public class ProdutoView extends VBox {
         ingredientes.setWrapText(true);
         ingredientes.setFont(Font.font(14));
 
+        Label mensagem = new Label("");
+
         HBox botoes = new HBox(12);
         Button btnCarrinho = new Button("add no Carrinho");
         btnCarrinho.setFont(Font.font(15));
         btnCarrinho.setOnAction(e -> {
+            try {
+                ItemCarrinho item = new ItemCarrinho();
+                item.setId(UUID.randomUUID());
+                item.setProduto(produto);
+                item.setQuantidade(1);
+                item.setCarrinho(Contexto.getCarrinhoAtivo());
+
+                SqlDaoFactory.getItemCarrinhoDao().add(item);
+
+            } catch (Exception er) {
+                mensagem.setText("Erro ao adicioanr item no carrinho");
+                er.printStackTrace();
+
+            }
+
             Contexto.chamaOutraTela(new CarrinhoView(), "Carrinho");
         });
 
         Button btnComprar = new Button("Comprar");
         btnComprar.setFont(Font.font(15));
+
+        btnComprar.setOnAction(e -> {
+
+        });
 
         botoes.getChildren().addAll(btnCarrinho, btnComprar);
 
@@ -115,8 +141,6 @@ public class ProdutoView extends VBox {
         direita.getChildren().addAll(img, preco);
 
         corpo.getChildren().addAll(esquerda, direita);
-
-        Label mensagem = new Label("");
 
         getChildren().addAll(top, corpo, mensagem);
     }
