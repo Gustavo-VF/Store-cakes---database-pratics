@@ -47,7 +47,7 @@ public class CarrinhoController {
             item.setQuantidade(qtd);
             SqlDaoFactory.getItemCarrinhoDao().update(item);
         } catch (Exception e) {
-            mensagem.set("erro ai atualizar qtd");
+            mensagem.set("Erro ao atualizar qtd");
             e.printStackTrace();
         }
 
@@ -61,7 +61,7 @@ public class CarrinhoController {
             itensSelecionados.remove(item);
             itens.remove(item);
         } catch (Exception e) {
-            mensagem.set("erro ao remover item");
+            mensagem.set("Erro ao remover item");
             e.printStackTrace();
 
         }

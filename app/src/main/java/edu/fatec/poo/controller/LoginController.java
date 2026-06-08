@@ -50,7 +50,7 @@ public class LoginController {
             Contexto.chamaOutraTela(new InicioView(), "Inicio");
 
         } catch (Exception e) {
-            mensagem.set("erro ai conectar no BD.");
+            mensagem.set("Erro ao conectar no BD.");
             e.printStackTrace();
         }
     }
