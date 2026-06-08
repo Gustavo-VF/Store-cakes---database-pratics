@@ -77,13 +77,14 @@ public class MinhaContaView extends VBox {
         txtNome.setMaxWidth(Double.MAX_VALUE);
 
         Label lblEmail = new Label("E-mail");
-        TextField txtEmail = new TextField(mc.getClienteLogado().getEmail());
+        TextField txtEmail = new TextField();
         txtEmail.setEditable(false);
         txtEmail.setMaxWidth(Double.MAX_VALUE);
 
         /*
         Label lblTelefone = new Label("Telefone");
         TextField txtTelefone = new TextField();
+        textTelefone.setEditable(false);
         txtTelefone.setMaxWidth(Double.MAX_VALUE);
          */
 
@@ -108,6 +109,7 @@ public class MinhaContaView extends VBox {
 
         Label lblEndereco = new Label("Endereço");
         TextField txtEndereco = new TextField();
+        txtEndereco.setEditable(false);
         txtEndereco.setPromptText("Logradouro");
         txtEndereco.setMaxWidth(Double.MAX_VALUE);
 
@@ -116,6 +118,7 @@ public class MinhaContaView extends VBox {
         VBox cepBox = new VBox(4);
         Label lblCep = new Label("CEP");
         TextField txtCep = new TextField();
+        txtCep.setEditable(false);
         HBox.setHgrow(cepBox, Priority.ALWAYS);
         txtCep.setMaxWidth(Double.MAX_VALUE);
         cepBox.getChildren().addAll(lblCep, txtCep);
@@ -123,6 +126,7 @@ public class MinhaContaView extends VBox {
         VBox numeroBox = new VBox(4);
         Label lblNumero = new Label("Número");
         TextField txtNumero = new TextField();
+        txtNumero.setEditable(false);
         txtNumero.setMaxWidth(Double.MAX_VALUE);
         numeroBox.getChildren().addAll(lblNumero, txtNumero);
 
@@ -130,6 +134,7 @@ public class MinhaContaView extends VBox {
 
         Label lblComplemento = new Label("Complemento");
         TextField txtComplemento = new TextField();
+        txtComplemento.setEditable(false);
         txtComplemento.setMaxWidth(Double.MAX_VALUE);
         txtComplemento.setPrefHeight(80);
         VBox.setVgrow(txtComplemento, Priority.ALWAYS);

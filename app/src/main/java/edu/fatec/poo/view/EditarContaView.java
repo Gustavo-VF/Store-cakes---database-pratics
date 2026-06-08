@@ -79,9 +79,11 @@ public class EditarContaView extends VBox {
         TextField txtEmail = new TextField();
         txtEmail.setMaxWidth(Double.MAX_VALUE);
 
+        /*
         Label lblTelefone = new Label("Telefone");
         TextField txtTelefone = new TextField();
         txtTelefone.setMaxWidth(Double.MAX_VALUE);
+         */
 
         HBox botoes = new HBox(10);
         Button btnSalvar = new Button("Salvar");
@@ -91,7 +93,7 @@ public class EditarContaView extends VBox {
         esquerda.getChildren().addAll(
                 lblNome, txtNome,
                 lblEmail, txtEmail,
-                lblTelefone, txtTelefone,
+                //lblTelefone, txtTelefone,
                 botoes);
 
         VBox direita = new VBox(10);
@@ -134,7 +136,7 @@ public class EditarContaView extends VBox {
 
         txtNome.textProperty().bindBidirectional(mc.nomeProperty());
         txtEmail.textProperty().bindBidirectional(mc.emailProperty());
-        txtTelefone.textProperty().bindBidirectional(mc.telefoneProperty());
+        //txtTelefone.textProperty().bindBidirectional(mc.telefoneProperty());
         txtEndereco.textProperty().bindBidirectional(mc.enderecoProperty());
         txtCep.textProperty().bindBidirectional(mc.cepProperty());
         txtNumero.textProperty().bindBidirectional(mc.numeroProperty());

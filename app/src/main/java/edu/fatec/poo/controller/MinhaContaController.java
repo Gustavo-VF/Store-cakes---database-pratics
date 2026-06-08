@@ -22,6 +22,10 @@ public class MinhaContaController {
         carregarDados();
         nome.set(clienteLogado.getNome());
         email.set(clienteLogado.getEmail());
+        endereco.set(clienteLogado.getEnderecoLogradouro());
+        cep.set(clienteLogado.getEnderecoCep());
+        numero.set(clienteLogado.getEnderecoNum().toString());
+        complemento.set(clienteLogado.getEnderecoComplemento());
     }
 
     public void carregarDados() {
