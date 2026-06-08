@@ -13,7 +13,7 @@ public class ConfiguredSqlConnector {
     private final String porta = "1433";
     private final String hostname = "localhost";
     private final String user = "sa";
-    private final String senha = "Origami123!";
+    private final String senha = "qwer@1234";
 
     private ADaoConnector conector;
 
