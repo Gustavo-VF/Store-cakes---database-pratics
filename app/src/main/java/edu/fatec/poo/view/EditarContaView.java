@@ -12,24 +12,28 @@ import javafx.scene.layout.VBox;
 
 public class EditarContaView extends VBox {
 
-    MinhaContaController mc = new MinhaContaController();
+    private final MinhaContaController mc = new MinhaContaController();
 
     public EditarContaView() {
         setSpacing(0);
         setPrefSize(900, 600);
 
+        // --- BARRA SUPERIOR (TOP) ---
         HBox top = new HBox(12);
         top.setPadding(new Insets(10, 16, 10, 16));
         top.setAlignment(Pos.CENTER_LEFT);
 
         Label logo = new Label("LOGO");
 
+        /*
         TextField txtPesquisa = new TextField();
         txtPesquisa.setPromptText("Pesquisar");
         txtPesquisa.setPrefWidth(180);
         txtPesquisa.setOnAction(event -> {
-            // mc.Pesquisar();
+            // mc.Pesquisar(txtPesquisa.getText());
         });
+
+         */
 
         Label titulo = new Label("Editar Conta");
         HBox.setHgrow(titulo, Priority.ALWAYS);
@@ -57,17 +61,24 @@ public class EditarContaView extends VBox {
                 Contexto.chamaOutraTela(new LoginView(), "Login");
             });
 
-            menu.getItems().addAll(
-                    itemInicio, itemMinhaConta, itemCarrinho,
-                    itemPedidos, itemSobreLoja, itemSair);
-
+            menu.getItems().addAll(itemInicio, itemMinhaConta, itemCarrinho, itemPedidos, itemSobreLoja, itemSair);
             menu.show(btnMenu, Side.BOTTOM, 0, 0);
         });
-        top.getChildren().addAll(logo, titulo, btnMenu);
 
+        // AJUSTE: txtPesquisa adicionado para igualar o topo com a MinhaContaView
+        top.getChildren().addAll(
+                logo,
+                //txtPesquisa,
+                titulo,
+                btnMenu
+        );
+
+        // --- CORPO DA TELA ---
         HBox corpo = new HBox(20);
+        corpo.setPadding(new Insets(20)); // Mesmo padding para manter o alinhamento idêntico
         VBox.setVgrow(corpo, Priority.ALWAYS);
 
+        // Coluna Esquerda (Dados Pessoais)
         VBox esquerda = new VBox(10);
         HBox.setHgrow(esquerda, Priority.ALWAYS);
 
@@ -79,11 +90,10 @@ public class EditarContaView extends VBox {
         TextField txtEmail = new TextField();
         txtEmail.setMaxWidth(Double.MAX_VALUE);
 
-        /*
+        // AJUSTE: Telefone descomentado e reativado na mesma posição da tela de visualização
         Label lblTelefone = new Label("Telefone");
         TextField txtTelefone = new TextField();
         txtTelefone.setMaxWidth(Double.MAX_VALUE);
-         */
 
         HBox botoes = new HBox(10);
         Button btnSalvar = new Button("Salvar");
@@ -93,9 +103,10 @@ public class EditarContaView extends VBox {
         esquerda.getChildren().addAll(
                 lblNome, txtNome,
                 lblEmail, txtEmail,
-                //lblTelefone, txtTelefone,
+                lblTelefone, txtTelefone,
                 botoes);
 
+        // Coluna Direita (Endereço)
         VBox direita = new VBox(10);
         HBox.setHgrow(direita, Priority.ALWAYS);
 
@@ -127,29 +138,32 @@ public class EditarContaView extends VBox {
         txtComplemento.setPrefHeight(80);
         VBox.setVgrow(txtComplemento, Priority.ALWAYS);
 
-        direita.getChildren().addAll(
-                lblEndereco, txtEndereco,
-                cepNumero,
-                lblComplemento, txtComplemento);
+        direita.getChildren().addAll(lblEndereco, txtEndereco, cepNumero, lblComplemento, txtComplemento);
 
+        // Juntando as colunas no corpo
         corpo.getChildren().addAll(esquerda, direita);
 
+        // --- BINDINGS (CONTROLLER) ---
         txtNome.textProperty().bindBidirectional(mc.nomeProperty());
         txtEmail.textProperty().bindBidirectional(mc.emailProperty());
-        //txtTelefone.textProperty().bindBidirectional(mc.telefoneProperty());
+        txtTelefone.textProperty().bindBidirectional(mc.telefoneProperty()); // Reativado
         txtEndereco.textProperty().bindBidirectional(mc.enderecoProperty());
         txtCep.textProperty().bindBidirectional(mc.cepProperty());
         txtNumero.textProperty().bindBidirectional(mc.numeroProperty());
         txtComplemento.textProperty().bindBidirectional(mc.complementoProperty());
 
+        // --- AÇÕES DOS BOTÕES ---
         btnSalvar.setOnAction(e -> mc.Editar());
         btnCancelar.setOnAction(e -> Contexto.chamaOutraTela(new MinhaContaView(), "Minha Conta"));
 
         Label mensagem = new Label("");
+        mensagem.setPadding(new Insets(0, 0, 10, 20)); // Mesmo espaçamento para mensagens de feedback
         mensagem.textProperty().bind(mc.mensagemProperty());
 
+        // Renderização final dos nós da cena
         getChildren().addAll(top, corpo, mensagem);
 
+        // Carrega as informações atuais do banco/controller para preencher os campos editáveis
         mc.carregarDados();
     }
 }

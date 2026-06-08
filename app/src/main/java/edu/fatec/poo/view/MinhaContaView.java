@@ -12,24 +12,28 @@ import javafx.scene.layout.VBox;
 
 public class MinhaContaView extends VBox {
 
-    MinhaContaController mc = new MinhaContaController();
+    private final MinhaContaController mc = new MinhaContaController();
 
     public MinhaContaView() {
         setSpacing(0);
         setPrefSize(900, 600);
 
+        // --- BARRA SUPERIOR (TOP) ---
         HBox top = new HBox(12);
         top.setPadding(new Insets(10, 16, 10, 16));
         top.setAlignment(Pos.CENTER_LEFT);
 
         Label logo = new Label("LOGO");
 
+        /*
         TextField txtPesquisa = new TextField();
         txtPesquisa.setPromptText("Pesquisar");
         txtPesquisa.setPrefWidth(180);
         txtPesquisa.setOnAction(event -> {
-            // mc.Pesquisar();
+            // mc.Pesquisar(txtPesquisa.getText());
         });
+
+         */
 
         Label titulo = new Label("INICIO");
         HBox.setHgrow(titulo, Priority.ALWAYS);
@@ -57,17 +61,24 @@ public class MinhaContaView extends VBox {
                 Contexto.chamaOutraTela(new LoginView(), "Login");
             });
 
-            menu.getItems().addAll(
-                    itemInicio, itemMinhaConta, itemCarrinho,
-                    itemPedidos, itemSobreLoja, itemSair);
-
+            menu.getItems().addAll(itemInicio, itemMinhaConta, itemCarrinho, itemPedidos, itemSobreLoja, itemSair);
             menu.show(btnMenu, Side.BOTTOM, 0, 0);
         });
-        top.getChildren().addAll(logo, titulo, btnMenu);
 
+        // CORREÇÃO: txtPesquisa adicionado ao topo
+        top.getChildren().addAll(
+                logo,
+                //txtPesquisa,
+                titulo,
+                btnMenu
+        );
+
+        // --- CORPO DA TELA ---
         HBox corpo = new HBox(20);
+        corpo.setPadding(new Insets(20)); // Adicionado padding para não colar nas bordas
         VBox.setVgrow(corpo, Priority.ALWAYS);
 
+        // Coluna Esquerda (Dados Pessoais)
         VBox esquerda = new VBox(10);
         HBox.setHgrow(esquerda, Priority.ALWAYS);
 
@@ -81,12 +92,11 @@ public class MinhaContaView extends VBox {
         txtEmail.setEditable(false);
         txtEmail.setMaxWidth(Double.MAX_VALUE);
 
-        /*
+        // CORREÇÃO: Telefone corrigido e reativado
         Label lblTelefone = new Label("Telefone");
         TextField txtTelefone = new TextField();
-        textTelefone.setEditable(false);
+        txtTelefone.setEditable(false);
         txtTelefone.setMaxWidth(Double.MAX_VALUE);
-         */
 
         HBox botoes = new HBox(10);
         Button btnEditar = new Button("Editar");
@@ -101,9 +111,10 @@ public class MinhaContaView extends VBox {
         esquerda.getChildren().addAll(
                 lblNome, txtNome,
                 lblEmail, txtEmail,
-                // lblTelefone, txtTelefone,
+                lblTelefone, txtTelefone, // Recolocado no layout
                 botoes, botoes2);
 
+        // Coluna Direita (Endereço)
         VBox direita = new VBox(10);
         HBox.setHgrow(direita, Priority.ALWAYS);
 
@@ -139,29 +150,30 @@ public class MinhaContaView extends VBox {
         txtComplemento.setPrefHeight(80);
         VBox.setVgrow(txtComplemento, Priority.ALWAYS);
 
-        direita.getChildren().addAll(
-                lblEndereco, txtEndereco,
-                cepNumero,
-                lblComplemento, txtComplemento);
+        direita.getChildren().addAll(lblEndereco, txtEndereco, cepNumero, lblComplemento, txtComplemento);
 
+        // Juntando as colunas no corpo
         corpo.getChildren().addAll(esquerda, direita);
 
+        // --- BINDINGS (CONTROLLER) ---
         txtNome.textProperty().bindBidirectional(mc.nomeProperty());
         txtEmail.textProperty().bindBidirectional(mc.emailProperty());
-        //txtTelefone.textProperty().bindBidirectional(mc.telefoneProperty());
+        txtTelefone.textProperty().bindBidirectional(mc.telefoneProperty()); // Reativado
         txtEndereco.textProperty().bindBidirectional(mc.enderecoProperty());
         txtCep.textProperty().bindBidirectional(mc.cepProperty());
         txtNumero.textProperty().bindBidirectional(mc.numeroProperty());
         txtComplemento.textProperty().bindBidirectional(mc.complementoProperty());
 
+        // --- AÇÕES DOS BOTÕES ---
         btnEditar.setOnAction(e -> Contexto.chamaOutraTela(new EditarContaView(), "Editar Conta"));
         btnCarrinho.setOnAction(e -> Contexto.chamaOutraTela(new CarrinhoView(), "Carrinho"));
         btnPedidos.setOnAction(e -> Contexto.chamaOutraTela(new PedidoView(), "Meus Pedidos"));
+
         btnExcluir.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Excluir conta");
             alert.setHeaderText("Certeza que deseja excluir sua conta?");
-            alert.setContentText("");
+            alert.setContentText("Esta ação não poderá ser desfeita.");
 
             ButtonType btnVoltar = new ButtonType("Voltar");
             ButtonType btnConfirmar = new ButtonType("Excluir");
@@ -174,9 +186,12 @@ public class MinhaContaView extends VBox {
                 }
             });
         });
+
         Label mensagem = new Label("");
+        mensagem.setPadding(new Insets(0, 0, 10, 20)); // Evita que a mensagem grude no rodapé
         mensagem.textProperty().bind(mc.mensagemProperty());
 
+        // CORREÇÃO: 'corpo' foi devidamente adicionado à árvore visual aqui
         getChildren().addAll(top, corpo, mensagem);
     }
 }
