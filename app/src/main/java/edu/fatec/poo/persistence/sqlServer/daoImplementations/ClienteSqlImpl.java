@@ -25,7 +25,7 @@ public class ClienteSqlImpl implements ClienteDAO {
 
     @Override
     public Optional<Cliente> add(Cliente cliente) throws SQLException, ClassNotFoundException {
-        if (cliente == null || cliente.getId() == null) return Optional.empty();
+        if (cliente == null || cliente.getId() == null || cliente.getRole() == null) return Optional.empty();
 
         String sql = "INSERT INTO " + tableName + " " +
                 "(id, nome, email, senha, endereco_logradouro, endereco_cep, endereco_num, endereco_complemento, role) " +
@@ -91,7 +91,7 @@ public class ClienteSqlImpl implements ClienteDAO {
 
     @Override
     public Optional<Cliente> update(Cliente cliente) throws SQLException, ClassNotFoundException {
-        if (cliente == null || cliente.getId() == null) return Optional.empty();
+        if (cliente == null || cliente.getId() == null || cliente.getRole() == null) return Optional.empty();
 
         String sql = "UPDATE " + tableName + " " +
                 "SET nome = ?, email = ?, senha = ?, endereco_logradouro = ?, endereco_cep = ?, " +
@@ -108,7 +108,7 @@ public class ClienteSqlImpl implements ClienteDAO {
             ps.setInt(6, cliente.getEnderecoNum());
             ps.setString(7, cliente.getEnderecoComplemento());
             ps.setString(8, cliente.getRole().name());
-            
+
             ps.setString(9, cliente.getId().toString());
 
             int colunasAfetadas = ps.executeUpdate();
