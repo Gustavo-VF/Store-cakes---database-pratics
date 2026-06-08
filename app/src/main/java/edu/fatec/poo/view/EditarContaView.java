@@ -153,7 +153,17 @@ public class EditarContaView extends VBox {
         txtComplemento.textProperty().bindBidirectional(mc.complementoProperty());
 
         // --- AÇÕES DOS BOTÕES ---
-        btnSalvar.setOnAction(e -> mc.Editar());
+        btnSalvar.setOnAction(e -> {
+            try {
+                mc.Editar();
+            } catch (Exception exception) {
+                Alert alert2 = new Alert(Alert.AlertType.ERROR);
+                alert2.setTitle("Erro");
+                alert2.setHeaderText("Ocorreu um erro?");
+                alert2.setContentText(exception.getMessage());
+                alert2.showAndWait();
+            }
+        });
         btnCancelar.setOnAction(e -> Contexto.chamaOutraTela(new MinhaContaView(), "Minha Conta"));
 
         Label mensagem = new Label("");

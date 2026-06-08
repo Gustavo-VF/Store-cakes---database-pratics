@@ -2,8 +2,11 @@ package edu.fatec.poo.controller;
 
 import edu.fatec.poo.Contexto;
 import edu.fatec.poo.model.Cliente;
+import edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import java.sql.SQLException;
 
 public class MinhaContaController {
 
@@ -32,10 +35,37 @@ public class MinhaContaController {
         this.clienteLogado = Contexto.getClienteLogado();
     }
 
-    public void Editar() {
+    public void Editar() throws SQLException, ClassNotFoundException, IllegalArgumentException {
+        SqlDaoFactory.getClienteDao().update(toEntity());
+        this.clienteLogado = toEntity();
+        Contexto.setClienteLogado(this.clienteLogado);
     }
 
-    public void Excluir() {
+    public void Excluir() throws SQLException, ClassNotFoundException, IllegalArgumentException {
+        System.out.println(clienteLogado);
+        if (SqlDaoFactory.getClienteDao().delete(clienteLogado).isPresent()) {
+            System.out.println(clienteLogado);
+            Contexto.sair();
+        } else {
+            System.out.println(clienteLogado);
+            throw new IllegalArgumentException("O Aluno não pode ser deletado.");
+        }
+    }
+
+
+    public Cliente toEntity() {
+        Cliente clienteAtualizado = new Cliente();
+
+        clienteAtualizado.setId(clienteLogado.getId());
+        clienteAtualizado.setSenha(clienteLogado.getSenha());
+        clienteAtualizado.setNome(nome.get());
+        clienteAtualizado.setEmail(email.get());
+        clienteAtualizado.setEnderecoLogradouro(endereco.get());
+        clienteAtualizado.setEnderecoCep(cep.get());
+        clienteAtualizado.setEnderecoNum(Integer.parseInt(numero.get()));
+        clienteAtualizado.setEnderecoComplemento(complemento.get());
+        clienteAtualizado.setRole(clienteLogado.getRole());
+        return clienteAtualizado;
     }
 
     public StringProperty nomeProperty() {

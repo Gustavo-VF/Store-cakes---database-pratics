@@ -182,7 +182,15 @@ public class MinhaContaView extends VBox {
 
             alert.showAndWait().ifPresent(resposta -> {
                 if (resposta == btnConfirmar) {
-                    mc.Excluir();
+                    try {
+                        mc.Excluir();
+                    } catch (Exception exception) {
+                        Alert alert2 = new Alert(Alert.AlertType.ERROR);
+                        alert2.setTitle("Erro");
+                        alert2.setHeaderText("Ocorreu um erro?");
+                        alert2.setContentText(exception.getMessage());
+                        alert2.showAndWait();
+                    }
                 }
             });
         });
