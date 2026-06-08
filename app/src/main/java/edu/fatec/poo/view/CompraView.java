@@ -213,11 +213,6 @@ public class CompraView extends VBox {
 
             alert.getButtonTypes().setAll(btnCancelar, btnConfirmar);
 
-            alert.showAndWait().ifPresent(resposta -> {
-                if (resposta == btnConfirmar) {
-
-                }
-            });
         });
 
         rodape.getChildren().addAll(btnVoltar, subtotalBox, freteBox, totalBox, btnProsseguir);

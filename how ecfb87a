@@ -1,0 +1,251 @@
+[33mcommit 6583153421acfc7cd5205fea2f8c8d0b96af0532[m
+Author: Gustavo-VF <gustavovaz278@gmail.com>
+Date:   Mon Jun 8 17:54:29 2026 -0300
+
+    ola mundo 2
+
+[1mdiff --git a/app/src/main/java/edu/fatec/poo/controller/CarrinhoController.java b/app/src/main/java/edu/fatec/poo/controller/CarrinhoController.java[m
+[1mindex 4d7cea2..b71f20c 100644[m
+[1m--- a/app/src/main/java/edu/fatec/poo/controller/CarrinhoController.java[m
+[1m+++ b/app/src/main/java/edu/fatec/poo/controller/CarrinhoController.java[m
+[36m@@ -5,10 +5,11 @@[m [mimport java.util.List;[m
+ [m
+ import edu.fatec.poo.Contexto;[m
+ import edu.fatec.poo.model.ItemCarrinho;[m
+[31m-[m
+ import edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;[m
+ import edu.fatec.poo.view.CompraView;[m
+ import javafx.beans.property.StringProperty;[m
+[32m+[m[32mimport javafx.beans.property.IntegerProperty;[m
+[32m+[m[32mimport javafx.beans.property.SimpleIntegerProperty;[m
+ import javafx.beans.property.SimpleStringProperty;[m
+ import javafx.collections.FXCollections;[m
+ import javafx.collections.ObservableList;[m
+[36m@@ -34,6 +35,11 @@[m [mpublic class CarrinhoController {[m
+             var resCarrinho = SqlDaoFactory.getItemCarrinhoDao().findByCarrinho(carrinho);[m
+ [m
+             resCarrinho.ifPresent(Lista -> itens.setAll(Lista));[m
+[32m+[m[32m            for (ItemCarrinho itemCarrinho : itens) {[m
+[32m+[m[32m                itemCarrinho.setQuantidade(1);[m
+[32m+[m
+[32m+[m[32m            }[m
+[32m+[m[32m            itensSelecionados.clear();[m
+         } catch ([m
+ [m
+         Exception e) {[m
+[1mdiff --git a/app/src/main/java/edu/fatec/poo/controller/CompraController.java b/app/src/main/java/edu/fatec/poo/controller/CompraController.java[m
+[1mindex 885dc68..3583cee 100644[m
+[1m--- a/app/src/main/java/edu/fatec/poo/controller/CompraController.java[m
+[1m+++ b/app/src/main/java/edu/fatec/poo/controller/CompraController.java[m
+[36m@@ -4,10 +4,15 @@[m [mimport edu.fatec.poo.model.ItemCarrinho;[m
+ import edu.fatec.poo.model.ItemPedido;[m
+ import edu.fatec.poo.model.Produto;[m
+ import edu.fatec.poo.model.TipoProduto;[m
+[32m+[m[32mimport edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;[m
+[32m+[m[32mimport edu.fatec.poo.Contexto;[m
+[32m+[m[32mimport edu.fatec.poo.controller.CarrinhoController;[m
+ import javafx.beans.property.SimpleStringProperty;[m
+ import javafx.beans.property.StringProperty;[m
+ import javafx.collections.FXCollections;[m
+ import javafx.collections.ObservableList;[m
+[32m+[m
+[32m+[m[32mimport java.util.ArrayList;[m
+ import java.util.List;[m
+ [m
+ public class CompraController {[m
+[36m@@ -57,6 +62,27 @@[m [mpublic class CompraController {[m
+         calcularTotais();[m
+     }[m
+ [m
+[32m+[m[32m    public void pagtoAprovado(List<ItemCarrinho> retirarDoCarrinho) {[m
+[32m+[m
+[32m+[m[32m        try {[m
+[32m+[m
+[32m+[m[32m            for (ItemCarrinho itemRetirado : retirarDoCarrinho) {[m
+[32m+[m[32m                SqlDaoFactory.getItemCarrinhoDao().delete(itemRetirado);[m
+[32m+[m[32m            }[m
+[32m+[m[32m            mensagem.set("compra realizada");[m
+[32m+[m
+[32m+[m[32m        } catch (Exception e) {[m
+[32m+[m[32m            mensagem.set("Erro ao finalizar pedido.");[m
+[32m+[m[32m            e.printStackTrace();[m
+[32m+[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public void pagtoReprovado() {[m
+[32m+[m
+[32m+[m[32m    }[m
+[32m+[m
+     public StringProperty enderecoProperty() {[m
+         return endereco;[m
+     }[m
+[1mdiff --git a/app/src/main/java/edu/fatec/poo/persistence/sqlServer/ConfiguredSqlConnector.java b/app/src/main/java/edu/fatec/poo/persistence/sqlServer/ConfiguredSqlConnector.java[m
+[1mindex 4d39991..8839360 100644[m
+[1m--- a/app/src/main/java/edu/fatec/poo/persistence/sqlServer/ConfiguredSqlConnector.java[m
+[1m+++ b/app/src/main/java/edu/fatec/poo/persistence/sqlServer/ConfiguredSqlConnector.java[m
+[36m@@ -13,7 +13,7 @@[m [mpublic class ConfiguredSqlConnector {[m
+     private final String porta = "1433";[m
+     private final String hostname = "localhost";[m
+     private final String user = "sa";[m
+[31m-    private final String senha = "qwer@1234";[m
+[32m+[m[32m    private final String senha = "Origami123!";[m
+ [m
+     private ADaoConnector conector;[m
+ [m
+[1mdiff --git a/app/src/main/java/edu/fatec/poo/view/CompraView.java b/app/src/main/java/edu/fatec/poo/view/CompraView.java[m
+[1mindex fc65da9..0fe9537 100644[m
+[1m--- a/app/src/main/java/edu/fatec/poo/view/CompraView.java[m
+[1m+++ b/app/src/main/java/edu/fatec/poo/view/CompraView.java[m
+[36m@@ -1,7 +1,9 @@[m
+ [m
+ package edu.fatec.poo.view;[m
+ [m
+[32m+[m[32mimport java.util.ArrayList;[m
+ import java.util.List;[m
+[32m+[m[32mimport java.util.UUID;[m
+ [m
+ import edu.fatec.poo.Contexto;[m
+ import edu.fatec.poo.controller.CompraController;[m
+[36m@@ -10,7 +12,9 @@[m [mimport edu.fatec.poo.model.ItemPedido;[m
+ import javafx.geometry.Insets;[m
+ import javafx.geometry.Pos;[m
+ import javafx.geometry.Side;[m
+[32m+[m[32mimport javafx.scene.control.Alert;[m
+ import javafx.scene.control.Button;[m
+[32m+[m[32mimport javafx.scene.control.ButtonType;[m
+ import javafx.scene.control.ContextMenu;[m
+ import javafx.scene.control.Label;[m
+ import javafx.scene.control.MenuItem;[m
+[36m@@ -21,17 +25,17 @@[m [mimport javafx.scene.layout.Priority;[m
+ import javafx.scene.layout.VBox;[m
+ import javafx.scene.text.Font;[m
+ import javafx.scene.text.FontWeight;[m
+[32m+[m[32mimport javafx.scene.text.TextAlignment;[m
+ [m
+ public class CompraView extends VBox {[m
+ [m
+     CompraController cc = new CompraController();[m
+[32m+[m[32m    private List<ItemPedido> itensDoPedido = new ArrayList<>();[m
+ [m
+     public CompraView(List<ItemCarrinho> itensPraComprar) {[m
+         setSpacing(0);[m
+         setPrefSize(900, 600);[m
+ [m
+[31m-        cc.setItens(itensPraComprar);[m
+[31m-[m
+         HBox top = new HBox(12);[m
+         top.setPadding(new Insets(10, 16, 10, 16));[m
+         top.setAlignment(Pos.CENTER_LEFT);[m
+[36m@@ -87,16 +91,26 @@[m [mpublic class CompraView extends VBox {[m
+ [m
+         cc.getItens().addListener((javafx.collections.ListChangeListener<ItemPedido>) change -> {[m
+             esquerda.getChildren().clear();[m
+[31m-            for (ItemPedido item : cc.getItens()) {[m
+[32m+[m[32m            for (ItemCarrinho item : itensPraComprar) {[m
+[32m+[m[32m                ItemPedido ip = new ItemPedido();[m
+[32m+[m
+[32m+[m[32m                ip.setId(UUID.randomUUID());[m
+[32m+[m[32m                ip.setQuantidade(item.getQuantidade());[m
+[32m+[m[32m                ip.setProduto(item.getProduto());[m
+[32m+[m[32m                ip.setPrecoUnitario(ip.getProduto().getPreco());[m
+[32m+[m[32m                ip.setPedido(null);[m
+[32m+[m
+[32m+[m[32m                itensDoPedido.add(ip);[m
+[32m+[m
+                 HBox linha = new HBox(10);[m
+                 linha.setPadding(new Insets(8));[m
+ [m
+                 VBox info = new VBox(4);[m
+                 HBox.setHgrow(info, Priority.ALWAYS);[m
+ [m
+[31m-                Label nome = new Label(item.getProduto().getNome());[m
+[32m+[m[32m                Label nome = new Label(ip.getProduto().getNome());[m
+ [m
+[31m-                Label tipo = new Label(item.getProduto().getTipoProduto() != null[m
+[32m+[m[32m                Label tipo = new Label(ip.getProduto().getTipoProduto() != null[m
+                         ? item.getProduto().getTipoProduto().getDescricao()[m
+                         : "");[m
+ [m
+[36m@@ -104,8 +118,8 @@[m [mpublic class CompraView extends VBox {[m
+ [m
+                 VBox precoQtd = new VBox(4);[m
+                 precoQtd.setAlignment(Pos.CENTER_RIGHT);[m
+[31m-                Label preco = new Label(String.format("R$ %.2f", item.getPrecoUnitario()));[m
+[31m-                Label qtd = new Label("0" + item.getQuantidade());[m
+[32m+[m[32m                Label preco = new Label(String.format("R$ %.2f", ip.getPrecoUnitario()));[m
+[32m+[m[32m                Label qtd = new Label("Quantidade: " + "0" + ip.getQuantidade());[m
+                 precoQtd.getChildren().addAll(preco, qtd);[m
+ [m
+                 linha.getChildren().addAll(info, precoQtd);[m
+[36m@@ -113,6 +127,8 @@[m [mpublic class CompraView extends VBox {[m
+             }[m
+         });[m
+ [m
+[32m+[m[32m        cc.setItens(itensPraComprar);[m
+[32m+[m
+         ScrollPane scroll = new ScrollPane(esquerda);[m
+         scroll.setFitToWidth(true);[m
+         scroll.setFitToHeight(true);[m
+[36m@@ -128,10 +144,13 @@[m [mpublic class CompraView extends VBox {[m
+         lblEndereco.setMaxWidth(Double.MAX_VALUE);[m
+         lblEndereco.setAlignment(Pos.CENTER);[m
+ [m
+[31m-        TextField txtEndereco = new TextField();[m
+[31m-        txtEndereco.setPromptText("Endereço cadastrado");[m
+[32m+[m[32m        Label txtEndereco = new Label();[m
+[32m+[m[32m        txtEndereco.setText((Contexto.getClienteLogado().getEnderecoLogradouro() + ",\n"[m
+[32m+[m[32m                + Contexto.getClienteLogado().getEnderecoNum() + " - " + Contexto.getClienteLogado().getEnderecoCep()[m
+[32m+[m[32m                + "\n" + Contexto.getClienteLogado().getEnderecoComplemento()));[m
+         txtEndereco.setMaxWidth(Double.MAX_VALUE);[m
+[31m-        txtEndereco.textProperty().bindBidirectional(cc.enderecoProperty());[m
+[32m+[m[32m        txtEndereco.setAlignment(Pos.CENTER);[m
+[32m+[m[32m        txtEndereco.setTextAlignment(TextAlignment.CENTER);[m
+ [m
+         direita.getChildren().addAll(lblEndereco, txtEndereco);[m
+ [m
+[36m@@ -171,6 +190,36 @@[m [mpublic class CompraView extends VBox {[m
+         btnProsseguir.setFont(Font.font(14));[m
+         btnProsseguir.setOnAction(e -> cc.Prosseguir());[m
+ [m
+[32m+[m[32m        btnProsseguir.setOnAction(e -> {[m
+[32m+[m[32m            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);[m
+[32m+[m[32m            alert.setTitle("PAGAMENTO");[m
+[32m+[m[32m            alert.setHeaderText("Eita, parece pare que nã temos uma api de pagamento"[m
+[32m+[m[32m                    + "\n" + "o botao de confirmar simula um pagamento aprovado");[m
+[32m+[m[32m            alert.setContentText("");[m
+[32m+[m
+[32m+[m[32m            ButtonType btnCancelar = new ButtonType("Voltar");[m
+[32m+[m[32m            ButtonType btnConfirmar = new ButtonType("Aprovado");[m
+[32m+[m
+[32m+[m[32m            alert.showAndWait().ifPresent(resp -> {[m
+[32m+[m[32m                if (resp == btnConfirmar) {[m
+[32m+[m[32m                    cc.pagtoAprovado(itensPraComprar);[m
+[32m+[m[32m                    // Contexto.chamaOutraTela(new InicioView(), "Início");[m
+[32m+[m[32m                }[m
+[32m+[m[32m                if (resp == btnCancelar) {[m
+[32m+[m[32m                    cc.pagtoReprovado();[m
+[32m+[m[32m                }[m
+[32m+[m
+[32m+[m[32m            });[m
+[32m+[m
+[32m+[m[32m            alert.getButtonTypes().setAll(btnCancelar, btnConfirmar);[m
+[32m+[m
+[32m+[m[32m            alert.showAndWait().ifPresent(resposta -> {[m
+[32m+[m[32m                if (resposta == btnConfirmar) {[m
+[32m+[m
+[32m+[m[32m                }[m
+[32m+[m[32m            });[m
+[32m+[m[32m        });[m
+[32m+[m
+         rodape.getChildren().addAll(btnVoltar, subtotalBox, freteBox, totalBox, btnProsseguir);[m
+ [m
+         Label mensagem = new Label("");[m
+[36m@@ -180,4 +229,5 @@[m [mpublic class CompraView extends VBox {[m
+ [m
+         cc.CarregarItens();[m
+     }[m
+[32m+[m
+ }[m
+\ No newline at end of file[m

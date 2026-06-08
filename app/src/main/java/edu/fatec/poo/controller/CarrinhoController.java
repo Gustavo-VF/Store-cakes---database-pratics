@@ -35,10 +35,7 @@ public class CarrinhoController {
             var resCarrinho = SqlDaoFactory.getItemCarrinhoDao().findByCarrinho(carrinho);
 
             resCarrinho.ifPresent(Lista -> itens.setAll(Lista));
-            for (ItemCarrinho itemCarrinho : itens) {
-                itemCarrinho.setQuantidade(1);
 
-            }
             itensSelecionados.clear();
         } catch (
 
@@ -113,11 +110,11 @@ public class CarrinhoController {
 
     public void selecionarItem(ItemCarrinho item, boolean select) {
         if (select) {
+            itensSelecionados.removeIf(i -> i.getId().equals(item.getId()));
             itensSelecionados.add(item);
         } else {
-            itensSelecionados.remove(item);
+            itensSelecionados.removeIf(i -> i.getId().equals(item.getId()));
         }
-
         calcTotal();
 
     }
