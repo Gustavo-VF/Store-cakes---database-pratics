@@ -84,4 +84,19 @@ public class Cliente {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "Id=" + Id +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                ", enderecoLogradouro='" + enderecoLogradouro + '\'' +
+                ", enderecoCep='" + enderecoCep + '\'' +
+                ", enderecoNum=" + enderecoNum +
+                ", enderecoComplemento='" + enderecoComplemento + '\'' +
+                ", role=" + role +
+                '}';
+    }
 }

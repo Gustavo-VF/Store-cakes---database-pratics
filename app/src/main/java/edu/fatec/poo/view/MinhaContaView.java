@@ -5,13 +5,7 @@ import edu.fatec.poo.controller.MinhaContaController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -79,15 +73,19 @@ public class MinhaContaView extends VBox {
 
         Label lblNome = new Label("Nome");
         TextField txtNome = new TextField();
+        txtNome.setEditable(false);
         txtNome.setMaxWidth(Double.MAX_VALUE);
 
         Label lblEmail = new Label("E-mail");
-        TextField txtEmail = new TextField();
+        TextField txtEmail = new TextField(mc.getClienteLogado().getEmail());
+        txtEmail.setEditable(false);
         txtEmail.setMaxWidth(Double.MAX_VALUE);
 
+        /*
         Label lblTelefone = new Label("Telefone");
         TextField txtTelefone = new TextField();
         txtTelefone.setMaxWidth(Double.MAX_VALUE);
+         */
 
         HBox botoes = new HBox(10);
         Button btnEditar = new Button("Editar");
@@ -102,7 +100,7 @@ public class MinhaContaView extends VBox {
         esquerda.getChildren().addAll(
                 lblNome, txtNome,
                 lblEmail, txtEmail,
-                lblTelefone, txtTelefone,
+                // lblTelefone, txtTelefone,
                 botoes, botoes2);
 
         VBox direita = new VBox(10);
@@ -145,7 +143,7 @@ public class MinhaContaView extends VBox {
 
         txtNome.textProperty().bindBidirectional(mc.nomeProperty());
         txtEmail.textProperty().bindBidirectional(mc.emailProperty());
-        txtTelefone.textProperty().bindBidirectional(mc.telefoneProperty());
+        //txtTelefone.textProperty().bindBidirectional(mc.telefoneProperty());
         txtEndereco.textProperty().bindBidirectional(mc.enderecoProperty());
         txtCep.textProperty().bindBidirectional(mc.cepProperty());
         txtNumero.textProperty().bindBidirectional(mc.numeroProperty());
@@ -175,7 +173,5 @@ public class MinhaContaView extends VBox {
         mensagem.textProperty().bind(mc.mensagemProperty());
 
         getChildren().addAll(top, corpo, mensagem);
-
-        mc.CarregarDados();
     }
 }

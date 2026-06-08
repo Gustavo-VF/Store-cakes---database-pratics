@@ -5,13 +5,7 @@ import edu.fatec.poo.controller.MinhaContaController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -154,6 +148,6 @@ public class EditarContaView extends VBox {
 
         getChildren().addAll(top, corpo, mensagem);
 
-        mc.CarregarDados();
+        mc.carregarDados();
     }
 }
