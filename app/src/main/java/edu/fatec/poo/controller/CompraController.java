@@ -4,10 +4,15 @@ import edu.fatec.poo.model.ItemCarrinho;
 import edu.fatec.poo.model.ItemPedido;
 import edu.fatec.poo.model.Produto;
 import edu.fatec.poo.model.TipoProduto;
+import edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;
+import edu.fatec.poo.Contexto;
+import edu.fatec.poo.controller.CarrinhoController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class CompraController {
@@ -55,6 +60,27 @@ public class CompraController {
             itens.add(ip);
         }
         calcularTotais();
+    }
+
+    public void pagtoAprovado(List<ItemCarrinho> retirarDoCarrinho) {
+
+        try {
+
+            for (ItemCarrinho itemRetirado : retirarDoCarrinho) {
+                SqlDaoFactory.getItemCarrinhoDao().delete(itemRetirado);
+            }
+            mensagem.set("compra realizada");
+
+        } catch (Exception e) {
+            mensagem.set("Erro ao finalizar pedido.");
+            e.printStackTrace();
+
+        }
+
+    }
+
+    public void pagtoReprovado() {
+
     }
 
     public StringProperty enderecoProperty() {

@@ -5,10 +5,11 @@ import java.util.List;
 
 import edu.fatec.poo.Contexto;
 import edu.fatec.poo.model.ItemCarrinho;
-
 import edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;
 import edu.fatec.poo.view.CompraView;
 import javafx.beans.property.StringProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +35,11 @@ public class CarrinhoController {
             var resCarrinho = SqlDaoFactory.getItemCarrinhoDao().findByCarrinho(carrinho);
 
             resCarrinho.ifPresent(Lista -> itens.setAll(Lista));
+            for (ItemCarrinho itemCarrinho : itens) {
+                itemCarrinho.setQuantidade(1);
+
+            }
+            itensSelecionados.clear();
         } catch (
 
         Exception e) {

@@ -1,7 +1,9 @@
 
 package edu.fatec.poo.view;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import edu.fatec.poo.Contexto;
 import edu.fatec.poo.controller.CompraController;
@@ -10,7 +12,9 @@ import edu.fatec.poo.model.ItemPedido;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -21,16 +25,16 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 public class CompraView extends VBox {
 
     CompraController cc = new CompraController();
+    private List<ItemPedido> itensDoPedido = new ArrayList<>();
 
     public CompraView(List<ItemCarrinho> itensPraComprar) {
         setSpacing(0);
         setPrefSize(900, 600);
-
-        cc.setItens(itensPraComprar);
 
         HBox top = new HBox(12);
         top.setPadding(new Insets(10, 16, 10, 16));
@@ -87,16 +91,26 @@ public class CompraView extends VBox {
 
         cc.getItens().addListener((javafx.collections.ListChangeListener<ItemPedido>) change -> {
             esquerda.getChildren().clear();
-            for (ItemPedido item : cc.getItens()) {
+            for (ItemCarrinho item : itensPraComprar) {
+                ItemPedido ip = new ItemPedido();
+
+                ip.setId(UUID.randomUUID());
+                ip.setQuantidade(item.getQuantidade());
+                ip.setProduto(item.getProduto());
+                ip.setPrecoUnitario(ip.getProduto().getPreco());
+                ip.setPedido(null);
+
+                itensDoPedido.add(ip);
+
                 HBox linha = new HBox(10);
                 linha.setPadding(new Insets(8));
 
                 VBox info = new VBox(4);
                 HBox.setHgrow(info, Priority.ALWAYS);
 
-                Label nome = new Label(item.getProduto().getNome());
+                Label nome = new Label(ip.getProduto().getNome());
 
-                Label tipo = new Label(item.getProduto().getTipoProduto() != null
+                Label tipo = new Label(ip.getProduto().getTipoProduto() != null
                         ? item.getProduto().getTipoProduto().getDescricao()
                         : "");
 
@@ -104,14 +118,16 @@ public class CompraView extends VBox {
 
                 VBox precoQtd = new VBox(4);
                 precoQtd.setAlignment(Pos.CENTER_RIGHT);
-                Label preco = new Label(String.format("R$ %.2f", item.getPrecoUnitario()));
-                Label qtd = new Label("0" + item.getQuantidade());
+                Label preco = new Label(String.format("R$ %.2f", ip.getPrecoUnitario()));
+                Label qtd = new Label("Quantidade: " + "0" + ip.getQuantidade());
                 precoQtd.getChildren().addAll(preco, qtd);
 
                 linha.getChildren().addAll(info, precoQtd);
                 esquerda.getChildren().add(linha);
             }
         });
+
+        cc.setItens(itensPraComprar);
 
         ScrollPane scroll = new ScrollPane(esquerda);
         scroll.setFitToWidth(true);
@@ -128,10 +144,13 @@ public class CompraView extends VBox {
         lblEndereco.setMaxWidth(Double.MAX_VALUE);
         lblEndereco.setAlignment(Pos.CENTER);
 
-        TextField txtEndereco = new TextField();
-        txtEndereco.setPromptText("Endereço cadastrado");
+        Label txtEndereco = new Label();
+        txtEndereco.setText((Contexto.getClienteLogado().getEnderecoLogradouro() + ",\n"
+                + Contexto.getClienteLogado().getEnderecoNum() + " - " + Contexto.getClienteLogado().getEnderecoCep()
+                + "\n" + Contexto.getClienteLogado().getEnderecoComplemento()));
         txtEndereco.setMaxWidth(Double.MAX_VALUE);
-        txtEndereco.textProperty().bindBidirectional(cc.enderecoProperty());
+        txtEndereco.setAlignment(Pos.CENTER);
+        txtEndereco.setTextAlignment(TextAlignment.CENTER);
 
         direita.getChildren().addAll(lblEndereco, txtEndereco);
 
@@ -171,6 +190,36 @@ public class CompraView extends VBox {
         btnProsseguir.setFont(Font.font(14));
         btnProsseguir.setOnAction(e -> cc.Prosseguir());
 
+        btnProsseguir.setOnAction(e -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("PAGAMENTO");
+            alert.setHeaderText("Eita, parece pare que nã temos uma api de pagamento"
+                    + "\n" + "o botao de confirmar simula um pagamento aprovado");
+            alert.setContentText("");
+
+            ButtonType btnCancelar = new ButtonType("Voltar");
+            ButtonType btnConfirmar = new ButtonType("Aprovado");
+
+            alert.showAndWait().ifPresent(resp -> {
+                if (resp == btnConfirmar) {
+                    cc.pagtoAprovado(itensPraComprar);
+                    // Contexto.chamaOutraTela(new InicioView(), "Início");
+                }
+                if (resp == btnCancelar) {
+                    cc.pagtoReprovado();
+                }
+
+            });
+
+            alert.getButtonTypes().setAll(btnCancelar, btnConfirmar);
+
+            alert.showAndWait().ifPresent(resposta -> {
+                if (resposta == btnConfirmar) {
+
+                }
+            });
+        });
+
         rodape.getChildren().addAll(btnVoltar, subtotalBox, freteBox, totalBox, btnProsseguir);
 
         Label mensagem = new Label("");
@@ -180,4 +229,5 @@ public class CompraView extends VBox {
 
         cc.CarregarItens();
     }
+
 }
