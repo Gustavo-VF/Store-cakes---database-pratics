@@ -72,7 +72,7 @@ public class CadastroController {
             // verifica se email est acadastrado no bd
             if (resultado.isPresent()) {
                 mensagem.set("E-mail: " + email.get() +
-                        " email já possui um cadastro cadastrado.");
+                        " email ja possui um cadastro cadastrado.");
                 return;
             }
 
@@ -105,7 +105,7 @@ public class CadastroController {
         } catch (
 
         Exception e) {
-            mensagem.set("erro ai conectar no BD.");
+            mensagem.set("Erro ao conectar no BD.");
             e.printStackTrace();
         }
 
