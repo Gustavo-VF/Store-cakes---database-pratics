@@ -1,5 +1,6 @@
 package edu.fatec.poo.persistence.sqlServer.daoImplementations;
 
+import edu.fatec.poo.model.Cliente;
 import edu.fatec.poo.model.Produto;
 import edu.fatec.poo.model.TipoProduto;
 import edu.fatec.poo.persistence.connection.ADaoConnector;
@@ -19,6 +20,7 @@ public class ProdutoSqlImpl implements ProdutoDAO {
 
     private final String tableName = "produto";
     private final String tableProdutoName = "tipo_produto";
+    private final String tableNameCliente = "cliente";
     private final ADaoConnector connector;
 
     public ProdutoSqlImpl() {
@@ -41,6 +43,10 @@ public class ProdutoSqlImpl implements ProdutoDAO {
         return fullQuery().append(" WHERE prod.tipo_produto = ?;").toString();
     }
 
+    private String fullQueryByVendedor() {
+        return fullQuery().append(" WHERE prod.vendedor = ?;").toString();
+    }
+
     private String fullQueryByPreco() {
         return fullQuery().append(" WHERE prod.preco >= ? AND prod.preco <= ?;").toString();
     }
@@ -50,10 +56,12 @@ public class ProdutoSqlImpl implements ProdutoDAO {
 
         startSelect(sql);
         appendProdutoColumns(sql).append(", ");
-        appendTipoProdutoColumns(sql);
+        appendTipoProdutoColumns(sql).append(", ");
+        appendVendedorColumns(sql);
 
         startFrom(sql);
         joinTipoProduto(sql);
+        joinVendedor(sql);
 
         return sql;
     }
@@ -70,6 +78,18 @@ public class ProdutoSqlImpl implements ProdutoDAO {
         return sql.append("prod.id, prod.nome, prod.preco, prod.tipo_produto");
     }
 
+    private StringBuilder appendVendedorColumns(StringBuilder sql) {
+        sql.append("vend.id AS vendedor_id, vend.nome AS vendedor_nome, vend.email AS vendedor_email, ");
+        sql.append("vend.senha AS vendedor_senha, vend.endereco_logradouro AS vendedor_logradouro, ");
+        sql.append("vend.endereco_cep AS vendedor_cep, vend.endereco_num AS vendedor_numero, ");
+        sql.append("vend.endereco_complemento AS vendedor_complemento");
+        return sql;
+    }
+
+    private StringBuilder joinVendedor(StringBuilder sql) {
+        return sql.append("INNER JOIN ").append(tableNameCliente).append(" vend ON prod.vendedor = vend.id ");
+    }
+
     private StringBuilder appendTipoProdutoColumns(StringBuilder sql) {
         return sql.append("tipo.descricao AS tipo_descricao");
     }
@@ -81,6 +101,7 @@ public class ProdutoSqlImpl implements ProdutoDAO {
     private Produto rsToProdutoFull(ResultSet rs) throws SQLException {
         Produto produto = mapProduto(rs);
         produto.setTipoProduto(mapTipoProduto(rs));
+        produto.setVendedor(mapVendedor(rs));
         return produto;
     }
 
@@ -90,6 +111,19 @@ public class ProdutoSqlImpl implements ProdutoDAO {
         produto.setNome(rs.getString("nome"));
         produto.setPreco(rs.getDouble("preco"));
         return produto;
+    }
+
+    private Cliente mapVendedor(ResultSet rs) throws SQLException {
+        Cliente vendedor = new Cliente();
+        vendedor.setId(UUID.fromString(rs.getString("vendedor_id")));
+        vendedor.setNome(rs.getString("vendedor_nome"));
+        vendedor.setEmail(rs.getString("vendedor_email"));
+        vendedor.setSenha(rs.getString("vendedor_senha"));
+        vendedor.setEnderecoLogradouro(rs.getString("vendedor_logradouro"));
+        vendedor.setEnderecoCep(rs.getString("vendedor_cep"));
+        vendedor.setEnderecoNum(rs.getInt("vendedor_numero"));
+        vendedor.setEnderecoComplemento(rs.getString("vendedor_complemento"));
+        return vendedor;
     }
 
     private TipoProduto mapTipoProduto(ResultSet rs) throws SQLException {
@@ -103,8 +137,9 @@ public class ProdutoSqlImpl implements ProdutoDAO {
     public Optional<Produto> add(Produto produto) throws SQLException, ClassNotFoundException {
         if (produto == null || produto.getId() == null) return Optional.empty();
         if (produto.getTipoProduto() == null || produto.getTipoProduto().getId() == null) return Optional.empty();
+        if (produto.getVendedor() == null || produto.getVendedor().getId() == null) return Optional.empty();
 
-        String sql = "INSERT INTO " + tableName + " (id, nome, preco, tipo_produto) VALUES (?, ?, ?, ?);";
+        String sql = "INSERT INTO " + tableName + " (id, nome, preco, tipo_produto, vendedor) VALUES (?, ?, ?, ?);";
         try (Connection c = connector.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
 
@@ -112,6 +147,7 @@ public class ProdutoSqlImpl implements ProdutoDAO {
             ps.setString(2, produto.getNome());
             ps.setDouble(3, produto.getPreco());
             ps.setString(4, produto.getTipoProduto().getId().toString());
+            ps.setString(5, produto.getVendedor().getId().toString());
 
             int colunasAfetadas = ps.executeUpdate();
 
@@ -163,15 +199,17 @@ public class ProdutoSqlImpl implements ProdutoDAO {
     public Optional<Produto> update(Produto produto) throws SQLException, ClassNotFoundException {
         if (produto == null || produto.getId() == null) return Optional.empty();
         if (produto.getTipoProduto() == null || produto.getTipoProduto().getId() == null) return Optional.empty();
+        if (produto.getVendedor() == null || produto.getVendedor().getId() == null) return Optional.empty();
 
-        String sql = "UPDATE " + tableName + " SET nome = ?, preco = ?, tipo_produto = ? WHERE id = ?;";
+        String sql = "UPDATE " + tableName + " SET nome = ?, preco = ?, tipo_produto = ? ,vendedor = ? WHERE id = ?;";
         try (Connection c = connector.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, produto.getNome());
             ps.setDouble(2, produto.getPreco());
             ps.setString(3, produto.getTipoProduto().getId().toString());
-            ps.setString(4, produto.getId().toString());
+            ps.setString(4, produto.getVendedor().getId().toString());
+            ps.setString(5, produto.getId().toString());
 
             int colunasAfetadas = ps.executeUpdate();
 
@@ -238,6 +276,28 @@ public class ProdutoSqlImpl implements ProdutoDAO {
              PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, tipoProduto.getId().toString());
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    produtos.add(rsToProdutoFull(rs));
+                }
+            }
+        }
+        return Optional.of(produtos);
+    }
+
+    @Override
+    public Optional<List<Produto>> findByVendedor(Cliente vendedor) throws SQLException, ClassNotFoundException {
+        if (vendedor == null || vendedor.getId() == null) return Optional.empty();
+
+        List<Produto> produtos = new ArrayList<>();
+
+        String sql = fullQueryByVendedor();
+        try (Connection c = connector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setString(1, vendedor.getId().toString());
 
             try (ResultSet rs = ps.executeQuery()) {
 

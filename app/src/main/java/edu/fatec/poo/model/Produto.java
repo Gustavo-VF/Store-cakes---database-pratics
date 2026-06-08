@@ -7,6 +7,7 @@ public class Produto {
     private String nome;
     private Double preco;
     private TipoProduto tipoProduto;
+    private Cliente vendedor;
 
     public UUID getId() {
         return id;
@@ -38,5 +39,13 @@ public class Produto {
 
     public void setTipoProduto(TipoProduto tipoProduto) {
         this.tipoProduto = tipoProduto;
+    }
+
+    public Cliente getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(Cliente vendedor) {
+        this.vendedor = vendedor;
     }
 }

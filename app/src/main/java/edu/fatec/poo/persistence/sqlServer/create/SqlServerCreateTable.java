@@ -25,7 +25,7 @@ public class SqlServerCreateTable implements ICreateTable {
         createTableCarrinho();
         createTableItemCarrinho();
     }
-    
+
     private void executeTableCreation(String tableName, String sql) throws SQLException, ClassNotFoundException {
         try (Connection c = connector.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -50,7 +50,8 @@ public class SqlServerCreateTable implements ICreateTable {
                         endereco_logradouro VARCHAR(150),
                         endereco_cep VARCHAR(9),
                         endereco_num INT CHECK ( endereco_num > 0 ),
-                        endereco_complemento VARCHAR(50)
+                        endereco_complemento VARCHAR(50),
+                        role VARCHAR(10) NOT NULL
                     );
                 END;
                 """;
@@ -81,7 +82,9 @@ public class SqlServerCreateTable implements ICreateTable {
                         nome VARCHAR(100) NOT NULL,
                         preco NUMERIC(8,2) NOT NULL CHECK ( preco > 0.0 ),
                         tipo_produto VARCHAR(36) NOT NULL,
-                        FOREIGN KEY (tipo_produto) REFERENCES tipo_produto(id)
+                        cliente VARCHAR(36) NOT NULL,
+                        FOREIGN KEY (tipo_produto) REFERENCES tipo_produto(id),
+                        FOREIGN KEY (cliente) REFERENCES cliente(id)
                     );
                 END;
                 """;
