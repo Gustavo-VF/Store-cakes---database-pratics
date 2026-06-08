@@ -2,14 +2,9 @@ package edu.fatec.poo.view;
 
 import edu.fatec.poo.Contexto;
 import edu.fatec.poo.controller.LoginController;
-import edu.fatec.poo.model.Produto;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 public class LoginView extends VBox {
@@ -32,6 +27,7 @@ public class LoginView extends VBox {
         Label mensagem = new Label("");
 
         Button btnEntrar = new Button("Entrar");
+        btnEntrar.setDefaultButton(true);
         btnEntrar.setMaxWidth(300);
 
         Hyperlink lnkCadastro = new Hyperlink("Criar conta");

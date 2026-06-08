@@ -2,6 +2,7 @@ package edu.fatec.poo;
 
 import edu.fatec.poo.model.Carrinho;
 import edu.fatec.poo.model.Cliente;
+import edu.fatec.poo.view.LoginView;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -52,6 +53,6 @@ public class Contexto {
     public static void sair() {
         clienteLogado = null;
         carrinhoAtivo = null;
+        chamaOutraTela(new LoginView(), "Login");
     }
-
 }
