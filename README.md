@@ -135,5 +135,7 @@ cd Store-cakes---database-pratics
 
 ## 👥 Desenvolvedores / Integrantes
 
-* **FATEC - Faculdade de Tecnologia**
-* Disciplina: Banco de Dados & Programação Orientada a Objetos
+- Gustavo Vaz Ferreira, **RA:** 1110482422023
+- Lucas Pereira de Mattos Sartorelli, **RA:** 1110482422021
+- Crislei Rosa de Souza, **RA:** 1110482422022
+- Caio Lucena Ribeiro, **RA:** 1110482422018
