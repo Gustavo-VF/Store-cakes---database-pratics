@@ -1,10 +1,16 @@
 package edu.fatec.poo.controller;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
+import edu.fatec.poo.Contexto;
 import edu.fatec.poo.model.Cliente;
+import edu.fatec.poo.model.ItemCarrinho;
+import edu.fatec.poo.model.ItemPedido;
 import edu.fatec.poo.model.Pedido;
 import edu.fatec.poo.model.StatusPedido;
+import edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;
+import edu.fatec.poo.view.CarrinhoView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -17,33 +23,19 @@ public class PedidoController {
 
     public void CarregarPedidos() {
 
-        Cliente cliente1 = new Cliente();
-        cliente1.setNome("Gustavo");
+        try {
+            pedidos.clear();
+            var pedidoBD = SqlDaoFactory.getPedidoDao().findByCliente(Contexto.getClienteLogado());
 
-        Pedido p1 = new Pedido();
-        p1.setCliente(cliente1);
-        p1.setData(LocalDate.of(2024, 3, 15));
-        p1.setPrecoTotal(45.00);
-        p1.setStatus(StatusPedido.ENTREGUE);
+            pedidoBD.ifPresent(Lista -> pedidos.addAll(Lista));
 
-        Pedido p2 = new Pedido();
-        p2.setCliente(cliente1);
-        p2.setData(LocalDate.of(2024, 4, 20));
-        p2.setPrecoTotal(90.00);
-        p2.setStatus(StatusPedido.ANDAMENTO);
+        } catch (Exception e) {
+            mensagem.set("Erro ao carregar pedidos.");
+            e.printStackTrace();
+        }
 
-        Pedido p3 = new Pedido();
-        p3.setCliente(cliente1);
-        p3.setData(LocalDate.of(2024, 5, 1));
-        p3.setPrecoTotal(60.00);
-        p3.setStatus(StatusPedido.CANCELADO);
-
-        pedidos.addAll(p1, p2, p3);
         // buscar do BD depois
-    }
 
-    public void pedirNovamente(Pedido pedido) {
-        // lógica depois
     }
 
     public ObservableList<Pedido> getPedidos() {

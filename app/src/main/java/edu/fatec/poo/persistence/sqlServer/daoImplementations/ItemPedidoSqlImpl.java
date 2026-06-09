@@ -29,15 +29,18 @@ public class ItemPedidoSqlImpl implements ItemPedidoDAO {
 
     @Override
     public Optional<ItemPedido> add(ItemPedido itemPedido) throws SQLException, ClassNotFoundException {
-        if (itemPedido == null || itemPedido.getId() == null) return Optional.empty();
-        if (itemPedido.getProduto() == null || itemPedido.getProduto().getId() == null) return Optional.empty();
-        if (itemPedido.getPedido() == null || itemPedido.getPedido().getId() == null) return Optional.empty();
+        if (itemPedido == null || itemPedido.getId() == null)
+            return Optional.empty();
+        if (itemPedido.getProduto() == null || itemPedido.getProduto().getId() == null)
+            return Optional.empty();
+        if (itemPedido.getPedido() == null || itemPedido.getPedido().getId() == null)
+            return Optional.empty();
 
         String sql = "INSERT INTO " + tableName + " " +
                 "(id, quantidade, preco_unitario, pedido, produto) " +
                 "VALUES (?, ?, ?, ?, ?);";
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+                PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, itemPedido.getId().toString());
             ps.setInt(2, itemPedido.getQuantidade());
@@ -52,12 +55,13 @@ public class ItemPedidoSqlImpl implements ItemPedidoDAO {
 
     @Override
     public Optional<ItemPedido> findById(UUID id) throws SQLException, ClassNotFoundException {
-        if (id == null) return Optional.empty();
+        if (id == null)
+            return Optional.empty();
 
         String sql = fullQuerryById();
 
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+                PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, id.toString());
 
@@ -79,8 +83,8 @@ public class ItemPedidoSqlImpl implements ItemPedidoDAO {
         String sql = fullQuerryAll();
 
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = c.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 ItemPedido itemPedido = rsToItemPedidoFull(rs);
@@ -90,18 +94,20 @@ public class ItemPedidoSqlImpl implements ItemPedidoDAO {
         return Optional.of(produtos);
     }
 
-
     @Override
     public Optional<ItemPedido> update(ItemPedido itemPedido) throws SQLException, ClassNotFoundException {
-        if (itemPedido == null || itemPedido.getId() == null) return Optional.empty();
-        if (itemPedido.getPedido() == null || itemPedido.getPedido().getId() == null) return Optional.empty();
-        if (itemPedido.getProduto() == null || itemPedido.getProduto().getId() == null) return Optional.empty();
+        if (itemPedido == null || itemPedido.getId() == null)
+            return Optional.empty();
+        if (itemPedido.getPedido() == null || itemPedido.getPedido().getId() == null)
+            return Optional.empty();
+        if (itemPedido.getProduto() == null || itemPedido.getProduto().getId() == null)
+            return Optional.empty();
 
         String sql = "UPDATE " + tableName + " " +
                 "SET quantidade = ?, preco_unitario = ?, pedido = ?, produto = ? " +
                 "WHERE id = ?;";
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+                PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setInt(1, itemPedido.getQuantidade());
             ps.setDouble(2, itemPedido.getPrecoUnitario());
@@ -116,12 +122,13 @@ public class ItemPedidoSqlImpl implements ItemPedidoDAO {
 
     @Override
     public Optional<ItemPedido> delete(ItemPedido itemPedido) throws SQLException, ClassNotFoundException {
-        if (itemPedido == null || itemPedido.getId() == null) return Optional.empty();
+        if (itemPedido == null || itemPedido.getId() == null)
+            return Optional.empty();
 
         String sql = "DELETE FROM " + tableName + " WHERE id = ?;";
 
         try (Connection c = connector.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+                PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, itemPedido.getId().toString());
 
@@ -187,7 +194,8 @@ public class ItemPedidoSqlImpl implements ItemPedidoDAO {
         sql.append("prod.id AS produto_id, prod.nome AS produto_nome, prod.preco AS produto_preco, ");
         sql.append("tipo.id AS tipo_id, tipo.descricao AS tipo_descricao, ped.id AS pedido_id, ");
         sql.append("ped.preco_total AS pedido_preco_total, ped.data AS pedido_data, ped.status AS pedido_status, ");
-        sql.append("cli.id AS cliente_id, cli.nome AS cliente_nome, cli.email AS cliente_email, cli.senha AS cliente_senha, ");
+        sql.append(
+                "cli.id AS cliente_id, cli.nome AS cliente_nome, cli.email AS cliente_email, cli.senha AS cliente_senha, ");
         sql.append("cli.endereco_logradouro AS cliente_logradouro, cli.endereco_cep AS cliente_cep, ");
         sql.append("cli.endereco_num AS cliente_numero, cli.endereco_complemento AS cliente_complemento ");
         sql.append("FROM ").append(tableName).append(" itp ");

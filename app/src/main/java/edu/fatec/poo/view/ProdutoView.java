@@ -3,6 +3,7 @@ package edu.fatec.poo.view;
 import java.util.UUID;
 
 import edu.fatec.poo.Contexto;
+import edu.fatec.poo.controller.ProdutoController;
 import edu.fatec.poo.model.ItemCarrinho;
 import edu.fatec.poo.model.Produto;
 import edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;
@@ -15,6 +16,9 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -22,6 +26,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 public class ProdutoView extends VBox {
+
+    ProdutoController pc = new ProdutoController();
 
     public ProdutoView(Produto produto) {
         setSpacing(0);
@@ -118,6 +124,8 @@ public class ProdutoView extends VBox {
 
         btnComprar.setOnAction(e -> {
 
+            pc.ComprarItem(produto);
+
         });
 
         botoes.getChildren().addAll(btnCarrinho, btnComprar);
@@ -128,10 +136,13 @@ public class ProdutoView extends VBox {
         direita.setAlignment(Pos.TOP_CENTER);
         direita.setPrefWidth(200);
 
-        Label img = new Label("img");
-        img.setPrefSize(150, 150);
-        img.setAlignment(Pos.CENTER);
-        img.setStyle("-fx-border-color: #aaa; -fx-border-radius: 10;");
+        Image imagem = new Image(
+                getClass().getResourceAsStream("/img/bolo2.png"));
+
+        ImageView img = new ImageView(imagem);
+        img.setFitWidth(250);
+        img.setFitHeight(250);
+        img.setPreserveRatio(true);
 
         Label preco = new Label(String.format("R$ %.2f", produto.getPreco()));
         preco.setFont(Font.font("System", FontWeight.BOLD, 18));

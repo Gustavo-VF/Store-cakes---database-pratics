@@ -1,8 +1,11 @@
 package edu.fatec.poo.controller;
 
+import edu.fatec.poo.model.Cliente;
 import edu.fatec.poo.model.ItemCarrinho;
 import edu.fatec.poo.model.ItemPedido;
+import edu.fatec.poo.model.Pedido;
 import edu.fatec.poo.model.Produto;
+import edu.fatec.poo.model.StatusPedido;
 import edu.fatec.poo.model.TipoProduto;
 import edu.fatec.poo.persistence.sqlServer.daoImplementations.SqlDaoFactory;
 import edu.fatec.poo.Contexto;
@@ -12,8 +15,10 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CompraController {
 
@@ -65,6 +70,25 @@ public class CompraController {
     public void pagtoAprovado(List<ItemCarrinho> retirarDoCarrinho) {
 
         try {
+
+            Pedido pedido = new Pedido();
+            pedido.setId(UUID.randomUUID());
+            pedido.setCliente(Contexto.getClienteLogado());
+            pedido.setData(LocalDate.now());
+            pedido.setStatus(StatusPedido.COMPLETO);
+
+            // SqlDaoFactory.getPedidoDao().add(pedido);
+            var resultado = SqlDaoFactory.getPedidoDao().add(pedido);
+
+            System.out.println("Salvou? " + resultado.isPresent());
+            System.out.println("Pedido: " + pedido.getId());
+            System.out.println("Cliente: " + pedido.getCliente().getId());
+
+            for (ItemPedido ip : itens) {
+                ip.setId(UUID.randomUUID());
+                ip.setPedido(pedido);
+                SqlDaoFactory.getItemPedidoDao().add(ip);
+            }
 
             for (ItemCarrinho itemRetirado : retirarDoCarrinho) {
                 SqlDaoFactory.getItemCarrinhoDao().delete(itemRetirado);

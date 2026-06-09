@@ -1,5 +1,7 @@
 package edu.fatec.poo.view;
 
+import java.util.Random;
+
 import edu.fatec.poo.Contexto;
 import edu.fatec.poo.controller.InicioController;
 import edu.fatec.poo.model.Produto;
@@ -12,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -20,6 +24,13 @@ import javafx.scene.text.Font;
 
 public class InicioView extends VBox {
     InicioController ic = new InicioController();
+    String[] imagens = {
+            "/img/bolo.png",
+            "/img/bolo2.png",
+            "/img/bolo3.png",
+            "/img/bolo4.png"
+    };
+    int contador = 0;
 
     public InicioView() {
         setSpacing(0);
@@ -85,10 +96,13 @@ public class InicioView extends VBox {
                 cardProduto.setPadding(new Insets(8));
                 cardProduto.setPrefWidth(150);
 
-                // trocar por uma Img depois
-                Label img = new Label("img");
-                img.setPrefSize(50, 50);
-                img.setAlignment(Pos.CENTER);
+                Image imagem = new Image(
+                        getClass().getResourceAsStream("/img/bolo2.png"));
+
+                ImageView img = new ImageView(imagem);
+                img.setFitWidth(130);
+                img.setFitHeight(130);
+                img.setPreserveRatio(true);
 
                 Label nome = new Label(p.getNome());
 
@@ -125,6 +139,14 @@ public class InicioView extends VBox {
         tituloChef.setMaxWidth(Double.MAX_VALUE);
         tituloChef.setAlignment(Pos.CENTER);
 
+        Image imagem = new Image(
+                getClass().getResourceAsStream("/img/imagemDoChef.png"));
+
+        ImageView img = new ImageView(imagem);
+        img.setFitWidth(130);
+        img.setFitHeight(130);
+        img.setPreserveRatio(true);
+
         Label foto = new Label("Foto \n Aqui");
         foto.setPrefSize(50, 50);
         foto.setAlignment(Pos.CENTER);
@@ -132,7 +154,7 @@ public class InicioView extends VBox {
         foto.setStyle("-fx-border-color: #aaa;");
         foto.setMaxWidth(Double.MAX_VALUE);
 
-        Label nomeChef = new Label("Fulano de Tal");
+        Label nomeChef = new Label("Emanuel da Silva Junior");
 
         Label descricaoChef = new Label("Descrição/Curiosidades \nsobre o(a) chef.");
 
@@ -147,7 +169,7 @@ public class InicioView extends VBox {
         Label emailChef = new Label("Fulano@email.com");
 
         sobreChef.getChildren().addAll(
-                tituloChef, foto, nomeChef, descricaoChef,
+                tituloChef, img, nomeChef, descricaoChef,
                 certificadosChef, eperienciasChef,
                 contatoChef, telefoneChef, emailChef);
 

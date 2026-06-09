@@ -101,19 +101,7 @@ public class PedidoView extends VBox {
         TableColumn<Pedido, Void> colAcao = new TableColumn<>("");
         colAcao.setPrefWidth(150);
         colAcao.setCellFactory(col -> new TableCell<>() {
-            Button btn = new Button("Pedir novamente");
-            {
-                btn.setOnAction(e -> {
-                    Pedido pedido = getTableView().getItems().get(getIndex());
-                    mc.pedirNovamente(pedido);
-                });
-            }
 
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : btn);
-            }
         });
 
         tabela.getColumns().addAll(colNome, colData, colValor, colStatus, colAcao);

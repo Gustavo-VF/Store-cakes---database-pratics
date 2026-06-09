@@ -193,22 +193,24 @@ public class CompraView extends VBox {
         btnProsseguir.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("PAGAMENTO");
-            alert.setHeaderText("Eita, parece pare que nã temos uma api de pagamento"
-                    + "\n" + "o botao de confirmar simula um pagamento aprovado");
-            alert.setContentText("");
+            alert.setHeaderText(
+                    "Eita, parece que não temos uma API de pagamento\n" +
+                            "O botão confirmar simula um pagamento aprovado");
 
             ButtonType btnCancelar = new ButtonType("Voltar");
-            ButtonType btnConfirmar = new ButtonType("Aprovado");
+            ButtonType btnConfirmar = new ButtonType("Confirmar");
+
+            alert.getButtonTypes().setAll(btnCancelar, btnConfirmar);
 
             alert.showAndWait().ifPresent(resp -> {
                 if (resp == btnConfirmar) {
                     cc.pagtoAprovado(itensPraComprar);
-                    // Contexto.chamaOutraTela(new InicioView(), "Início");
+                    Contexto.chamaOutraTela(new PedidoView(), "Pedidos");
                 }
+
                 if (resp == btnCancelar) {
                     cc.pagtoReprovado();
                 }
-
             });
 
             alert.getButtonTypes().setAll(btnCancelar, btnConfirmar);
